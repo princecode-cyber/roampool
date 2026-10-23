@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>RoamPool – travel together, college to college</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;800&family=Figtree:wght@400;500;700&display=swap">
+<style>
+:root{--or:#F26A1B;--or2:#FF9A5C;--ink:#2B1B10;--mut:#8A7566;--soft:#FFF3EA;--line:#F4E1D3;--bg:#fff;color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+*{box-sizing:border-box}html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;font:15px/1.5 Figtree,system-ui,sans-serif;color:var(--ink);background:var(--bg)}
+h1,h2,h3,.logo{font-family:'Bricolage Grotesque',Figtree,sans-serif;margin:0;letter-spacing:-.02em}
+button,input,select{font:inherit}
+.btn{background:var(--or);color:#fff;border:0;border-radius:12px;padding:10px 18px;font-weight:700;cursor:pointer;transition:transform .15s,box-shadow .15s}
+.btn:hover{transform:translateY(-1px);box-shadow:0 6px 16px #f26a1b44}.btn.ghost{background:#fff;color:var(--or);border:1.5px solid var(--or)}.btn.sm{padding:6px 12px;font-size:13px;border-radius:9px}
+:focus-visible{outline:3px solid var(--or2);outline-offset:2px}
+input,select{width:100%;padding:11px 13px;border:1.5px solid var(--line);border-radius:11px;background:#fff;color:var(--ink)}
+input:focus,select:focus{border-color:var(--or);outline:0;box-shadow:0 0 0 3px #f26a1b22}
+label{display:block;font-size:13px;font-weight:700;margin:12px 0 5px}
+.hide{display:none!important}
+/* auth */
+#auth{position:relative;z-index:2;background:#fff;min-height:100vh;display:grid;grid-template-columns:1.1fr 1fr;transition:opacity .35s,transform .35s}
+#auth.out{opacity:0;transform:scale(.985)}
+.hero{background:linear-gradient(160deg,var(--or),#FF8A3D 70%,#FFB27D);color:#fff;padding:48px;display:flex;flex-direction:column;justify-content:space-between;position:relative;overflow:hidden}
+.hero h1{font-size:clamp(34px,5vw,60px);line-height:1.02;font-weight:800;max-width:520px}
+.hero p{max-width:420px;opacity:.95;font-size:17px}
+.hero svg{position:absolute;right:-40px;bottom:-10px;width:80%;opacity:.28}
+.logo{font-weight:800;font-size:24px}.logo b{color:var(--or)}.hero .logo b{color:#fff;opacity:.85}
+.panel{display:flex;align-items:center;justify-content:center;padding:32px}
+.box{width:100%;max-width:400px;animation:rise .5s both}
+@keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+.tabs{display:flex;background:var(--soft);border-radius:12px;padding:4px;margin:18px 0}
+.tabs button{flex:1;border:0;background:none;padding:9px;border-radius:9px;font-weight:700;color:var(--mut);cursor:pointer;transition:.2s}
+.tabs button.on{background:#fff;color:var(--or);box-shadow:0 2px 8px #f26a1b22}
+.err{color:#C0361B;font-size:13px;min-height:18px;margin-top:8px}
+.demo{background:var(--soft);border-radius:10px;padding:10px 12px;font-size:12.5px;color:var(--mut);margin-top:14px}
+.adminlink{background:none;border:0;color:var(--mut);margin-top:16px;cursor:pointer;text-decoration:underline;font-size:13px}
+/* app */
+#app{animation:rise .5s both}
+header{position:sticky;top:0;z-index:5;background:#fffffff2;backdrop-filter:blur(8px);border-bottom:1px solid var(--line);display:flex;align-items:center;gap:18px;padding:12px 24px;flex-wrap:wrap}
+nav{display:flex;gap:4px;flex:1}nav button{border:0;background:none;padding:8px 14px;border-radius:10px;font-weight:700;color:var(--mut);cursor:pointer}
+nav button.on{background:var(--soft);color:var(--or)}
+.who{font-size:13px;color:var(--mut)}.who b{color:var(--ink)}
+.tag{display:inline-block;background:var(--soft);color:var(--or);border-radius:20px;padding:2px 10px;font-size:12px;font-weight:700}
+main{max-width:1280px;margin:0 auto;padding:28px 24px 60px;position:relative;z-index:1}
+.sub{color:var(--mut);margin:4px 0 22px}
+/* season columns */
+.cols{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px;align-items:start}
+.col h3{font-size:18px;padding:10px 14px;border-radius:12px;background:var(--soft);display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.col h3 small{font:500 12px Figtree;color:var(--mut)}
+.card{border:1px solid var(--line);border-radius:16px;overflow:hidden;background:#fff;margin-bottom:14px;box-shadow:0 4px 16px #2b1b1010}
+.pic{height:140px;position:relative;overflow:hidden}.pic svg{width:100%;height:100%;display:block}
+.off{position:absolute;top:10px;left:10px;background:var(--or);color:#fff;font-size:12px;font-weight:700;padding:3px 9px;border-radius:20px}
+.rec{position:absolute;top:10px;right:10px;background:#fff;color:var(--or);font-size:11px;font-weight:700;padding:3px 8px;border-radius:20px}
+.cb{padding:12px 14px}.cb h4{margin:0;font:800 17px 'Bricolage Grotesque',sans-serif}
+.price{font-weight:800;font-size:19px;color:var(--or)}.price s{color:var(--mut);font-weight:400;font-size:13px;margin-left:6px}
+.why{color:var(--mut);font-size:13px;margin:4px 0 8px}.pkg{font-size:12.5px;background:var(--soft);border-radius:9px;padding:7px 9px;margin-bottom:10px}
+.row{display:flex;gap:8px}.row .btn{flex:1}
+/* pools */
+.bar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:18px;align-items:center}.bar select{width:auto}
+.chip{border:1.5px solid var(--line);background:#fff;border-radius:20px;padding:6px 14px;cursor:pointer;font-weight:700;color:var(--mut)}.chip.on{background:var(--or);border-color:var(--or);color:#fff}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:16px}
+.mem{display:flex;margin:8px 0}.av{width:30px;height:30px;border-radius:50%;background:var(--or2);color:#fff;font-weight:700;font-size:12px;display:grid;place-items:center;border:2px solid #fff;margin-left:-8px}.av:first-child{margin-left:0}
+.meta{font-size:13px;color:var(--mut)}.bar2{height:6px;background:var(--soft);border-radius:6px;overflow:hidden;margin:6px 0 10px}.bar2 i{display:block;height:100%;background:var(--or)}
+.form{background:var(--soft);border-radius:16px;padding:18px;margin-bottom:22px}
+.fg{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:0 14px}
+/* chat */
+.chat{display:grid;grid-template-columns:240px 1fr;border:1px solid var(--line);border-radius:16px;overflow:hidden;height:540px}
+.rooms{background:var(--soft);overflow:auto;padding:10px}.rooms button{display:block;width:100%;text-align:left;border:0;background:none;padding:10px;border-radius:10px;cursor:pointer;font-weight:700}
+.rooms button.on{background:#fff;color:var(--or)}.rooms small{display:block;font-weight:400;color:var(--mut)}
+.cm{display:flex;flex-direction:column;min-height:0}.cm .top{padding:12px 16px;border-bottom:1px solid var(--line);font-weight:700}
+.msgs{flex:1;overflow:auto;padding:14px 16px;display:flex;flex-direction:column;gap:8px}
+.m{max-width:75%;background:var(--soft);padding:8px 12px;border-radius:14px 14px 14px 4px;animation:rise .25s both}.m small{display:block;color:var(--or);font-weight:700;font-size:11.5px}
+.m.me{align-self:flex-end;background:var(--or);color:#fff;border-radius:14px 14px 4px 14px}.m.me small{color:#ffe3d0}
+.send{display:flex;gap:8px;padding:10px;border-top:1px solid var(--line)}
+.typing{font-size:12px;color:var(--mut);padding:0 16px 6px;min-height:20px}
+/* admin */
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:14px;margin-bottom:22px}.stat{border:1px solid var(--line);border-radius:14px;padding:16px}.stat b{font:800 30px 'Bricolage Grotesque';color:var(--or);display:block}
+table{width:100%;border-collapse:collapse;font-size:14px}th,td{text-align:left;padding:10px;border-bottom:1px solid var(--line)}th{color:var(--mut);font-weight:700}
+.tw{overflow-x:auto;border:1px solid var(--line);border-radius:14px;margin-bottom:22px}
+/* modal/toast */
+.ov{position:fixed;inset:0;background:#2b1b1088;display:grid;place-items:center;z-index:20;padding:16px;animation:fade .2s}
+@keyframes fade{from{opacity:0}}
+.md{background:#fff;border-radius:18px;padding:22px;max-width:420px;width:100%;animation:rise .3s both}
+#toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(80px);background:var(--ink);color:#fff;padding:11px 18px;border-radius:12px;transition:.3s;z-index:30}#toast.show{transform:translateX(-50%)}
+#sky{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+.k{position:absolute;opacity:.75}
+.k1{width:380px;top:10%;left:-4%;animation:ksway 16s ease-in-out infinite alternate}
+.k2{width:260px;top:30%;right:-3%;animation:ksway 12s ease-in-out -4s infinite alternate}
+.k3{width:440px;top:55%;left:20%;animation:ksway 19s ease-in-out -8s infinite alternate;opacity:.55}
+.k4{width:220px;top:72%;right:12%;animation:ksway 11s ease-in-out -2s infinite alternate}
+.k5{width:300px;top:3%;left:48%;animation:ksway 14s ease-in-out -6s infinite alternate;opacity:.6}
+@keyframes ksway{from{transform:translate(-40px,0)}to{transform:translate(70px,14px)}}
+.bw{position:absolute;left:0;bottom:0;width:100%;height:70px}
+.bw path{animation:flow2 14s linear infinite}
+.cl.a{animation:swayc 7s ease-in-out infinite alternate}
+.cl.b{animation:swayc 9s ease-in-out -3s infinite alternate}
+@keyframes swayc{from{transform:translateX(-12px)}to{transform:translateX(16px)}}
+.sw{animation:flow 5s linear infinite}
+@keyframes flow{to{transform:translateX(-160px)}}
+@keyframes flow2{to{transform:translateX(-300px)}}
+.pic{overflow:hidden}.pic svg,.pic img{transform:scale(var(--z,1));transition:transform .12s linear}
+.beach{height:240px;border-radius:20px;overflow:hidden;margin-bottom:24px;border:1px solid var(--line);box-shadow:0 8px 24px #f26a1b22}
+.beach svg{width:100%;height:100%;display:block}
+.beach .scn{transform:scale(calc(1 + var(--k,0)*.4));transform-origin:50% 100%}
+.beach .sun{transform:translateY(calc(var(--k,0)*-46px))}
+.beach .wv{animation:flow2 9s linear infinite}.beach .w2{animation-duration:6s;animation-direction:reverse}
+@property --a{syntax:'<angle>';initial-value:0deg;inherits:false}
+@keyframes spin{to{--a:360deg}}
+@keyframes rgbmove{to{background-position:200% 0}}
+@keyframes hue{to{filter:hue-rotate(360deg)}}
+:root{--rgb:#ff2d2d,#ff9a00,#ffe600,#14c45a,#00c8ff,#2d7bff,#a64dff,#ff2d2d}
+.card{border:2px solid transparent;background:linear-gradient(#fff,#fff) padding-box,linear-gradient(var(--line),var(--line)) border-box}
+.card:hover{background:linear-gradient(#fff,#fff) padding-box,conic-gradient(from var(--a),var(--rgb)) border-box;animation:spin 3s linear infinite;box-shadow:0 0 22px #a64dff44,0 0 34px #00c8ff33}
+header::after{content:'';position:absolute;left:0;right:0;bottom:-1px;height:3px;background:linear-gradient(90deg,var(--rgb));background-size:200% 100%;animation:rgbmove 4s linear infinite}
+header .logo b{background:linear-gradient(90deg,var(--rgb));background-size:200% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:rgbmove 5s linear infinite}
+.btn:hover{box-shadow:0 0 0 2px #fff,0 0 14px #ff2d2d88,0 0 26px #2d7bff77}
+.btn.rgbb{background:linear-gradient(#F26A1B,#F26A1B) padding-box,conic-gradient(from var(--a),var(--rgb)) border-box;border:2px solid transparent;animation:spin 3s linear infinite}
+.btn.s-r,.off.s-r,.tagst.s-r{background:#FF2D2D;box-shadow:0 0 12px #ff2d2d88}
+.btn.s-g,.off.s-g,.tagst.s-g{background:#14C45A;box-shadow:0 0 12px #14c45a88}
+.btn.s-b,.off.s-b,.tagst.s-b{background:#2D7BFF;box-shadow:0 0 12px #2d7bff88}
+.tagst{display:inline-block;color:#fff;font-weight:700;font-size:12px;padding:3px 10px;border-radius:20px;margin-top:6px}
+.tagst.s-b{animation:pulse 1.6s ease-in-out infinite}@keyframes pulse{50%{box-shadow:0 0 22px #2d7bffcc}}
+@media(max-width:1000px){.cols{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:760px){#auth{grid-template-columns:1fr}.hero{padding:28px;min-height:230px}.hero p{display:none}.cols{grid-template-columns:1fr}.chat{grid-template-columns:1fr;height:620px}.rooms{display:flex;overflow-x:auto;padding:6px}.rooms button{width:auto;white-space:nowrap}header{padding:10px 14px}main{padding:20px 14px 50px}}
+/* v2: opening splash, RGB + per-section looks */
+@keyframes splash{0%,70%{opacity:1;visibility:visible}100%{opacity:0;visibility:hidden}}
+@keyframes pop{from{opacity:0;transform:scale(.4) rotate(-6deg)}}
+@keyframes cardin{from{opacity:0;transform:translateY(28px) scale(.94) rotateX(12deg)}to{opacity:1;transform:none}}
+@keyframes shine{to{background-position:300% 0}}
+@keyframes gshift{50%{background-position:100% 50%}}
+@keyframes drop{from{transform:translateY(-100%);opacity:0}}
+#splash{position:fixed;inset:0;z-index:99;display:grid;place-items:center;background:linear-gradient(160deg,#F26A1B,#FF8A3D 70%,#FFB27D);animation:splash 2.2s ease forwards;pointer-events:none}
+#splash .logo{font-size:60px;color:#fff;animation:pop .9s cubic-bezier(.2,1.4,.4,1) both}
+#splash .logo b,header .logo b{background:linear-gradient(90deg,var(--rgb));background-size:200% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;opacity:1;animation:rgbmove 2s linear infinite}
+#splash i{position:absolute;bottom:38%;left:50%;margin-left:-90px;width:180px;height:4px;border-radius:4px;background:linear-gradient(90deg,var(--rgb));background-size:200% 100%;animation:rgbmove 1.2s linear infinite}
+.hero::before{content:'';position:absolute;width:440px;height:440px;left:-140px;top:-140px;border-radius:50%;background:conic-gradient(from var(--a),var(--rgb));filter:blur(70px);opacity:.35;animation:spin 8s linear infinite}
+.hero>*{position:relative}.hero .logo{animation:rise .8s .3s both}.hero h1{animation:rise .8s .5s both}.hero p{animation:rise .8s .7s both}
+.box>*{animation:rise .6s both}.box>*:nth-child(2){animation-delay:.1s}.box>*:nth-child(3){animation-delay:.2s}.box>*:nth-child(n+4){animation-delay:.3s}
+input:focus,select:focus{border-color:transparent;background:linear-gradient(#fff,#fff) padding-box,linear-gradient(90deg,var(--rgb)) border-box;background-size:auto,200% 100%;animation:rgbmove 3s linear infinite;box-shadow:0 0 14px #a64dff33}
+#app header{animation:drop .6s .1s both}
+nav button{transition:.2s}nav button:hover{background:var(--soft);color:var(--or)}
+nav button.on{position:relative}nav button.on::after{content:'';position:absolute;left:12px;right:12px;bottom:2px;height:3px;border-radius:3px;background:linear-gradient(90deg,var(--rgb));background-size:200% 100%;animation:rgbmove 3s linear infinite}
+main h2{background:linear-gradient(90deg,#2B1B10,#F26A1B,#a64dff,#2D7BFF,#2B1B10);background-size:300% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:shine 9s linear infinite}
+.card{position:relative;animation:cardin .6s var(--d,0s) both;transition:translate .25s,box-shadow .25s}
+.card:hover{animation:cardin .6s var(--d,0s) both,spin 3s linear infinite;translate:0 -5px}
+.card::after{content:'';position:absolute;inset:0;pointer-events:none;opacity:0;transition:opacity .2s;background:radial-gradient(190px circle at var(--mx,50%) var(--my,50%),#ff2d2d18,#2d7bff18 45%,transparent 70%)}.card:hover::after{opacity:1}
+.beach{border:2px solid transparent;background:linear-gradient(#fff,#fff) padding-box,conic-gradient(from var(--a),var(--rgb)) border-box;animation:spin 6s linear infinite}
+.c-Winter{--ac:#2D7BFF}.c-Summer{--ac:#F26A1B}.c-Monsoon{--ac:#14C45A}.c-Autumn{--ac:#D6451F}
+.col h3{border-left:5px solid var(--ac);background:linear-gradient(90deg,color-mix(in srgb,var(--ac) 16%,#fff),#fff)}
+.col .off{background:var(--ac)}.col .price{color:var(--ac)}.col .btn:not(.ghost){background:var(--ac)}.col .btn.ghost{color:var(--ac);border-color:var(--ac);background:#fff}
+.bar2 i{background:linear-gradient(90deg,var(--rgb));background-size:200% 100%;animation:rgbmove 3s linear infinite}
+.av{background:linear-gradient(135deg,var(--or),#a64dff);transition:transform .2s}.av:hover{transform:translateY(-3px) scale(1.15);z-index:1}
+.chip{transition:.2s}.chip:hover{transform:translateY(-2px);border-color:var(--or)}.chip.on{background:linear-gradient(120deg,#F26A1B,#a64dff,#2D7BFF);background-size:200% 200%;animation:gshift 5s ease infinite;box-shadow:0 0 14px #a64dff55}
+.form{border:2px solid transparent;background:linear-gradient(var(--soft),var(--soft)) padding-box,linear-gradient(90deg,var(--rgb)) border-box;background-size:auto,200% 100%;animation:rise .4s both,rgbmove 4s linear infinite}
+.rooms button{transition:.2s}.rooms button:hover{background:#fff8}.rooms button.on{box-shadow:inset 3px 0 0 var(--or),0 0 14px #a64dff33}
+.m.me{background:linear-gradient(120deg,#F26A1B,#a64dff,#2D7BFF);background-size:200% 200%;animation:rise .25s both,gshift 6s ease infinite}
+.chat{box-shadow:0 8px 28px #a64dff1f}
+.stat{position:relative;overflow:hidden}.stat::before{content:'';position:absolute;left:0;right:0;top:0;height:4px;background:linear-gradient(90deg,var(--rgb));background-size:200% 100%;animation:rgbmove 3s linear infinite}
+.stat{animation:cardin .6s both}.stat:nth-child(2){animation-delay:.08s}.stat:nth-child(3){animation-delay:.16s}.stat:nth-child(4){animation-delay:.24s}
+tr{transition:background .2s}tbody tr:hover td,table tr:hover td{background:var(--soft)}
+.md{border:2px solid transparent;background:linear-gradient(#fff,#fff) padding-box,conic-gradient(from var(--a),var(--rgb)) border-box;animation:rise .3s both,spin 4s linear infinite}
+#toast{box-shadow:0 0 0 2px #ffffff22,0 0 22px #a64dff88}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}#splash{display:none}}
+
+/* v3: beach & cloud palette, new sections, RoamBot */
+:root{--or:#0A9DB5;--or2:#4FD1E0;--ink:#0B2A3C;--mut:#5E7C8D;--soft:#E6F7FA;--line:#CFEAF0;--co:#FF6B57}
+body{background:linear-gradient(#CFF1FA 0,#EAF9FD 300px,#fff 800px,#FFF6DF) fixed}
+#sky .k{color:#fff!important}.bw path{fill:#BDEFF6}
+#bs stop:first-child{stop-color:#7FD4F5}#bs stop:nth-child(2){stop-color:#EAFAFF}
+.hero,#splash{background:linear-gradient(160deg,#0A9DB5,#2BB8D6 55%,#8EE3EF)}
+.off{background:var(--co)}.price{color:#E8503A}
+.btn.rgbb{background:linear-gradient(var(--or),var(--or)) padding-box,conic-gradient(from var(--a),var(--rgb)) border-box}
+.chip.on,.m.me{background-image:linear-gradient(120deg,#0A9DB5,#7C4DFF,#FF4D8D)}
+main h2{background-image:linear-gradient(90deg,#0B2A3C,#0A9DB5,#7C4DFF,#FF6B57,#0B2A3C)}
+textarea{width:100%;padding:11px 13px;border:1.5px solid var(--line);border-radius:11px;min-height:80px;font:inherit;color:var(--ink);resize:vertical}
+textarea:focus{outline:0;border-color:var(--or);box-shadow:0 0 0 3px #0a9db522}
+nav{overflow-x:auto}nav button{white-space:nowrap}#who{cursor:pointer}
+.bch{position:absolute;left:0;bottom:0;width:100%;height:220px}
+.sunr{transform-origin:1040px 60px;animation:spinr 40s linear infinite}@keyframes spinr{to{transform:rotate(360deg)}}
+.wv3{animation:flow2 10s linear infinite}.wv3.b{animation-duration:7s;animation-direction:reverse}
+.sail{animation:sail 50s ease-in-out infinite alternate}@keyframes sail{from{transform:translateX(-500px)}to{transform:translateX(450px)}}
+.boat{transform-box:fill-box;transform-origin:center;animation:bobr 4s ease-in-out infinite}@keyframes bobr{50%{transform:translateY(-6px) rotate(2deg)}}
+.gl{fill:none;stroke:#2B4A5E;stroke-width:3;stroke-linecap:round;animation:fly 24s linear infinite}.gl.g2{animation-duration:32s;animation-delay:-12s}
+@keyframes fly{from{transform:translateX(-200px)}to{transform:translateX(1500px)}}
+@keyframes bob{50%{transform:translateY(-6px)}}
+.wv2{height:34px;overflow:hidden;margin:-8px 0 14px;border-radius:12px}.wv2 svg{width:100%;height:100%;display:block}
+.wv2 path{animation:flow2 9s linear infinite}.wv2 .b{animation-duration:6s;animation-direction:reverse}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0}
+.pf{display:grid;grid-template-columns:300px 1fr;gap:20px;align-items:start}@media(max-width:860px){.pf{grid-template-columns:1fr}}
+.pcard{border-radius:18px;padding:22px;text-align:center;border:2px solid transparent;background:linear-gradient(#fff,#fff) padding-box,conic-gradient(from var(--a),var(--rgb)) border-box;animation:rise .5s both,spin 6s linear infinite}
+.bigav{width:96px;height:96px;border-radius:50%;margin:0 auto 10px;display:grid;place-items:center;font:800 40px 'Bricolage Grotesque';color:#fff;background:linear-gradient(135deg,var(--or),#7C4DFF);box-shadow:0 0 0 4px #fff,0 0 22px #7c4dff66}
+.pcard .stats{margin:14px 0 0}
+.hav{display:inline-grid;place-items:center;width:30px;height:30px;border-radius:50%;margin-right:6px;font-weight:800;color:#fff;border:2px solid transparent;background:linear-gradient(var(--or),var(--or)) padding-box,conic-gradient(from var(--a),var(--rgb)) border-box;animation:spin 4s linear infinite;vertical-align:middle}
+.cstrip{height:8px;background:linear-gradient(90deg,hsl(var(--h) 85% 58%),hsl(calc(var(--h) + 70) 85% 58%),hsl(var(--h) 85% 58%));background-size:200% 100%;animation:rgbmove 4s linear infinite}
+.gr{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--line)}
+#aiw{position:fixed;right:18px;bottom:18px;z-index:40}
+#aib{width:58px;height:58px;border-radius:50%;border:3px solid transparent;font-size:24px;cursor:pointer;background:linear-gradient(var(--or),var(--or)) padding-box,conic-gradient(from var(--a),var(--rgb)) border-box;animation:spin 3s linear infinite,bob 3s ease-in-out infinite}
+#aip{position:absolute;right:0;bottom:72px;width:min(360px,calc(100vw - 36px));border-radius:18px;border:2px solid transparent;background:linear-gradient(#fff,#fff) padding-box,conic-gradient(from var(--a),var(--rgb)) border-box;box-shadow:0 14px 40px #0b2a3c44;overflow:hidden;animation:rise .3s both,spin 5s linear infinite}
+.aih{display:flex;gap:8px;align-items:center;padding:11px 14px;background:linear-gradient(120deg,#0A9DB5,#7C4DFF);color:#fff}.aih span{flex:1;opacity:.85;font-size:12px}.aih button{background:none;border:0;color:#fff;font-size:20px;cursor:pointer}
+#aim{height:250px;overflow:auto;padding:12px;display:flex;flex-direction:column;gap:8px}
+#aim>div{max-width:90%;padding:8px 11px;border-radius:14px 14px 14px 4px;background:var(--soft);font-size:14px;animation:rise .25s both}
+#aim>.u{align-self:flex-end;background:var(--or);color:#fff;border-radius:14px 14px 4px 14px}
+#aiq{display:flex;gap:6px;flex-wrap:wrap;padding:0 12px 8px}#aiq .chip{font-size:12px;padding:4px 10px}
+.dots{display:flex;gap:4px;width:fit-content}.dots i{width:7px;height:7px;border-radius:50%;background:var(--or);animation:bob 1s infinite}.dots i:nth-child(2){animation-delay:.15s}.dots i:nth-child(3){animation-delay:.3s}
+
+/* v4 */
+.off.s-p,.tagst.s-p{background:#7C4DFF;box-shadow:0 0 12px #7c4dff88}
+body{background:linear-gradient(120deg,#CFF1FA,#F3EBFF,#FFF1E4,#D8F7F1);background-size:300% 300%;animation:gshift 22s ease infinite;background-attachment:fixed}
+header{background:#ffffffc2;backdrop-filter:blur(16px) saturate(1.5)}
+header .logo::before{content:'✈';display:inline-block;margin-right:6px;color:var(--or);animation:hop 3s ease-in-out infinite}
+@keyframes hop{50%{transform:translate(4px,-5px) rotate(-12deg)}}
+nav button{border-radius:20px}nav button:hover{transform:translateY(-2px)}
+main h2::after{content:'';display:block;width:110px;height:10px;margin-top:2px;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 110 10'%3E%3Cpath d='M0 5q7-8 14 0t14 0 14 0 14 0 14 0 14 0 14 0 14 0' fill='none' stroke='%230A9DB5' stroke-width='3' stroke-linecap='round'/%3E%3C/svg%3E")}
+.card{border-radius:22px;box-shadow:0 8px 26px #0b2a3c14}.card:hover{scale:1.015}
+.pic::after{content:'';position:absolute;inset:0;pointer-events:none;background:linear-gradient(110deg,transparent 40%,#ffffff77 50%,transparent 60%);transform:translateX(-130%);transition:transform .9s}.card:hover .pic::after{transform:translateX(130%)}
+.btn{position:relative;overflow:hidden}.btn:active{transform:scale(.95)}
+.stat{border-radius:18px;background:#ffffffcc;backdrop-filter:blur(6px)}
+.heart{position:absolute;bottom:8px;right:10px;width:34px;height:34px;border:0;border-radius:50%;background:#fff;color:#c4d3da;font-size:17px;cursor:pointer;box-shadow:0 2px 10px #0003;transition:.2s;z-index:2}.heart:hover{transform:scale(1.18)}.heart.on{color:#FF4D6D;animation:beat .45s}
+@keyframes beat{40%{transform:scale(1.5)}}
+.cd{display:inline-block;margin:4px 0 2px;font-size:12px;font-weight:700;color:#7C4DFF;background:#F1EAFF;border-radius:20px;padding:2px 10px}
+.ann{display:flex;gap:10px;align-items:center;background:linear-gradient(90deg,#FF6B57,#FF4D8D,#7C4DFF);background-size:200% 100%;animation:rgbmove 6s linear infinite,rise .5s both;color:#fff;border-radius:16px;padding:12px 16px;margin-bottom:18px;box-shadow:0 8px 22px #ff4d8d44}
+.dz{display:grid;justify-items:center;gap:5px;text-align:center;padding:20px;border:2.5px dashed var(--or);border-radius:20px;background:#fff;cursor:pointer;transition:.2s;margin-bottom:6px}.dz:hover,.dz.over{background:var(--soft);border-color:#7C4DFF}.dz.over{transform:scale(1.03);box-shadow:0 0 0 6px #7c4dff22}
+.dz svg{width:58px;height:58px;animation:bob 2.4s ease-in-out infinite}.dz span{color:var(--mut);font-size:13px}.dz.has{border-style:solid;border-color:#14C45A}
+.bigav{overflow:hidden}.bigav img,.hav img{width:100%;height:100%;object-fit:cover;border-radius:50%;display:block}.hav{overflow:hidden}
+.fl{position:absolute;pointer-events:none;filter:drop-shadow(0 6px 8px #0b2a3c22)}
+.f1{width:130px;top:14%;left:0;animation:crs 30s linear infinite}@keyframes crs{from{transform:translateX(-200px)}to{transform:translateX(115vw)}}
+.f2{width:70px;right:6%;top:22%;animation:bob 5s ease-in-out infinite,sw2 9s ease-in-out infinite alternate}@keyframes sw2{to{margin-right:30px}}
+.f3{width:56px;left:3%;top:64%;animation:bob 6s ease-in-out infinite}.f4{width:40px;right:10%;top:60%;animation:jmp 1.8s ease-in-out infinite}
+@keyframes jmp{50%{transform:translateY(-16px)}}.nd{transform-origin:32px 32px;animation:wob 3s ease-in-out infinite alternate}@keyframes wob{from{transform:rotate(-40deg)}to{transform:rotate(70deg)}}
+.hero>svg.hv{position:absolute;inset:0;width:100%;height:100%;right:auto;bottom:auto;opacity:1;pointer-events:none}
+.hv .pl{animation:none}.hv .bal{animation:bob 4s ease-in-out infinite}
+.cf{position:fixed;top:-16px;width:9px;height:14px;z-index:60;pointer-events:none;border-radius:2px;animation:cfall 1.9s ease-in forwards}@keyframes cfall{to{transform:translate(var(--x),105vh) rotate(720deg);opacity:.7}}
+@media(prefers-reduced-motion:reduce){.cf{display:none}}
+
+/* v5 */
+html{scroll-behavior:smooth}
+.pwb{position:relative}.pwb input{padding-right:46px}
+#eye{position:absolute;right:6px;top:50%;transform:translateY(-50%);width:34px;height:34px;border:0;border-radius:50%;background:none;cursor:pointer;display:grid;place-items:center;transition:.2s}#eye:hover{background:var(--soft);transform:translateY(-50%) scale(1.1)}#eye svg{width:20px;height:20px;stroke:var(--or);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.ths{display:flex;gap:10px;flex-wrap:wrap;margin-top:8px}.th{position:relative;width:84px;height:84px;border-radius:14px;overflow:hidden;animation:pop .4s both;box-shadow:0 4px 12px #0b2a3c22}.th img{width:100%;height:100%;object-fit:cover}.th button{position:absolute;top:4px;right:4px;width:22px;height:22px;border:0;border-radius:50%;background:#000a;color:#fff;cursor:pointer;line-height:1}
+.pt{animation:ptin .55s cubic-bezier(.2,.8,.2,1) both}@keyframes ptin{from{opacity:0;transform:translateY(22px);filter:blur(6px)}}
+#pg{position:fixed;top:0;left:0;height:4px;width:0;z-index:70;background:linear-gradient(90deg,var(--rgb));background-size:200% 100%;animation:rgbmove 3s linear infinite;transition:width .1s}
+#gl{position:fixed;left:0;top:0;width:380px;height:380px;margin:-190px 0 0 -190px;border-radius:50%;background:radial-gradient(#7c4dff26,#0a9db516 45%,transparent 68%);pointer-events:none;z-index:0;transition:transform .18s ease-out}
+.rp{position:absolute;border-radius:50%;background:#fff7;transform:scale(0);animation:rpl .6s ease-out forwards;pointer-events:none}@keyframes rpl{to{transform:scale(1);opacity:0}}
+.btn.rgbb::after{content:'';position:absolute;inset:0;background:linear-gradient(110deg,transparent 35%,#fff6 50%,transparent 65%);transform:translateX(-120%);animation:swp 3.2s ease-in-out infinite}@keyframes swp{60%,100%{transform:translateX(120%)}}
+.srw{margin:0 0 16px}.srch{max-width:380px;border-radius:30px;padding:11px 18px;box-shadow:0 4px 14px #0b2a3c14}
+.cb{position:relative}.shr{position:absolute;top:8px;right:10px;border:0;background:var(--soft);border-radius:50%;width:30px;height:30px;cursor:pointer;transition:.25s;z-index:2}.shr:hover{transform:rotate(-15deg) scale(1.15);background:#fff}
+#bell{position:relative;border:0;background:var(--soft);width:38px;height:38px;border-radius:50%;cursor:pointer;font-size:17px;transition:.2s}#bell:hover{transform:rotate(14deg) scale(1.1)}#bell.ring{animation:ringb .7s}@keyframes ringb{25%{transform:rotate(22deg)}50%{transform:rotate(-18deg)}75%{transform:rotate(10deg)}}
+#bc{position:absolute;top:-3px;right:-3px;min-width:18px;height:18px;border-radius:9px;background:#FF4D6D;color:#fff;font:700 11px/18px Figtree;font-style:normal;padding:0 4px}
+#np{position:fixed;top:64px;right:16px;width:min(320px,calc(100vw - 32px));max-height:60vh;overflow:auto;background:#fff;border-radius:18px;padding:12px;z-index:50;box-shadow:0 14px 40px #0b2a3c44;animation:rise .3s both}#np div{padding:8px 4px;border-bottom:1px solid var(--line);font-size:14px}#np small{color:var(--mut);display:block}
+#zm{cursor:zoom-out}#zm img{max-width:94vw;max-height:88vh;border-radius:18px;animation:pop .35s both}
+</style></head><body>
+<div id="splash"><div class="logo">Roam<b>Pool</b></div><i></i></div>
+
+<svg width="0" height="0" style="position:absolute"><defs><symbol id="cloud" viewBox="0 0 200 80"><g fill="currentColor"><ellipse cx="60" cy="54" rx="48" ry="20"/><ellipse cx="105" cy="38" rx="40" ry="28"/><ellipse cx="145" cy="55" rx="46" ry="19"/></g></symbol></defs></svg>
+<div id="sky"><svg class="bch" viewBox="0 0 1200 220" preserveAspectRatio="xMidYMax slice"><g class="sunr"><circle cx="1040" cy="60" r="34" fill="#FFE27A"/><path d="M1040 8v-14M1040 112v14M988 60h-14M1092 60h14M1003 23l-10-10M1077 97l10 10M1003 97l-10 10M1077 23l10-10" stroke="#FFD34D" stroke-width="5" stroke-linecap="round"/></g><path class="gl" d="M200 70q14-14 28 0q14-14 28 0"/><path class="gl g2" d="M120 40q10-10 20 0q10-10 20 0"/><path class="wv3" d="M0 150q75-22 150 0t150 0t150 0t150 0t150 0t150 0t150 0t150 0t150 0t150 0v70H0z" fill="#8FE0EC" opacity=".8"/><g class="sail"><g class="boat"><path d="M600 138h60l-10 14h-40z" fill="#FF6B57"/><path d="M630 136V92l26 40z" fill="#fff"/><path d="M630 136V100l-20 36z" fill="#FFE9D0"/></g></g><path class="wv3 b" d="M0 168q75-18 150 0t150 0t150 0t150 0t150 0t150 0t150 0t150 0t150 0t150 0v52H0z" fill="#27B8D0"/><path d="M0 220V192q300-30 600-6t600-10v44z" fill="#F6E3B4"/><path d="M70 205q8-60 0-112" stroke="#8A5A2B" stroke-width="7" fill="none"/><path d="M70 94q-34-10-52 12M70 94q34-10 52 12M70 94q-18-30-44-30M70 94q18-30 44-30" stroke="#2FA866" stroke-width="7" fill="none" stroke-linecap="round"/></svg><svg class="k k1" viewBox="0 0 200 80" style="color:#FFE2CC"><use href="#cloud"/></svg><svg class="k k2" viewBox="0 0 200 80" style="color:#FFE2CC"><use href="#cloud"/></svg><svg class="k k3" viewBox="0 0 200 80" style="color:#FFE2CC"><use href="#cloud"/></svg><svg class="k k4" viewBox="0 0 200 80" style="color:#FFE2CC"><use href="#cloud"/></svg><svg class="k k5" viewBox="0 0 200 80" style="color:#FFE2CC"><use href="#cloud"/></svg><svg class="bw" viewBox="0 0 1200 70" preserveAspectRatio="none"><path d="M0 30q75-24 150 0t150 0t150 0t150 0t150 0t150 0t150 0t150 0t150 0t150 0v40H0z" fill="#FFE8D6" opacity=".8"/></svg></div>
+<section id="auth">
+ <div class="hero"><div class="logo">Roam<b>Pool</b></div>
+  <div><h1>Your next trip is waiting for a few more people.</h1><p>Pool up with students from your college, other branches and faculty who want to go where you do. Plan it, book it, chat about it.</p></div>
+  <svg viewBox="0 0 400 200"><path d="M0 200V120l60-60 50 50 70-90 80 100 50-40 90 80v40z" fill="#fff"/></svg></div>
+ <div class="panel"><div class="box">
+  <div class="logo">Roam<b>Pool</b></div>
+  <h2 id="at" style="font-size:26px;margin-top:14px">Welcome back</h2>
+  <div class="tabs" id="tabs"><button class="on" data-m="in">Sign in</button><button data-m="up">Create account</button></div>
+  <div id="fup" class="hide"><label>Full name</label><input id="nm" autocomplete="name">
+   <div class="fg"><div><label>I am a</label><select id="rl"><option>Student</option><option>Faculty</option><option>Other</option></select></div>
+   <div><label>Branch</label><input id="br" placeholder="CSE, ME, EE…"></div></div>
+   <label>College</label><input id="cl" list="clg" placeholder="Search your college"></div>
+  <label>Email</label><input id="em" type="email" autocomplete="email">
+  <label>Password</label><div class="pwb"><input id="pw" type="password" autocomplete="current-password"><button type="button" id="eye" aria-label="Show password" aria-pressed="false"></button></div>
+  <div class="err" id="er"></div>
+  <button class="btn rgbb" style="width:100%;margin-top:6px" id="go">Sign in</button>
+  <div class="demo" id="demo">Try it now: <b>student@demo.in</b> / <b>demo123</b></div>
+  <button class="adminlink" id="adm">Admin login</button>
+ </div></div>
+</section>
+
+<div id="app" class="hide">
+ <header><div class="logo">Roam<b>Pool</b></div>
+  <nav id="nav"></nav>
+  <div class="who" id="who"></div><button class="btn ghost sm" id="out">Log out</button></header>
+ <main id="main"></main><div id="aiw"><div id="aip" class="hide"><div class="aih"><b>✨ RoamBot</b><span id="aic"></span><button id="aix">×</button></div><div id="aim"></div><div id="aiq"></div><div class="send"><input id="aii" placeholder="Ask about trips, costs, plans" autocomplete="off"><button class="btn sm rgbb" id="aig">Ask</button></div></div><button id="aib" title="Ask RoamBot">✨</button></div>
+</div>
+<div id="toast"></div>
+
+<script>
+const $=s=>document.querySelector(s),esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const SEAS=[['Winter','Nov–Feb'],['Summer','Mar–Jun'],['Monsoon','Jul–Sep'],['Autumn','Oct–Nov']];
+const D=[
+{id:1,n:'Goa',st:'Goa',s:'Winter',sc:'goa',p:4200,o:15,why:'Beach shacks, cafés and a budget hostel scene.',pkg:'Sleeper train + 3N hostel + scooter day'},
+{id:2,n:'Jaisalmer',st:'Rajasthan',s:'Winter',sc:'jais',p:5100,o:10,why:'Desert camps and fort sunsets in cool weather.',pkg:'Train + 2N desert camp + camel safari'},
+{id:3,n:'Manali',st:'Himachal',s:'Summer',sc:'manali',p:5600,o:20,why:'Escape the heat: rafting, Solang and cafés.',pkg:'Volvo bus + 3N homestay + Solang trip'},
+{id:4,n:'Spiti Valley',st:'Himachal',s:'Summer',sc:'spiti',p:7800,o:12,why:'High-altitude monasteries and star skies.',pkg:'Shared tempo + 4N homestays + guide'},
+{id:5,n:'Munnar',st:'Kerala',s:'Monsoon',sc:'munnar',p:6200,o:18,why:'Mist-covered tea hills at their greenest.',pkg:'Flight/train + 3N resort + tea trail'},
+{id:6,n:'Meghalaya',st:'Meghalaya',s:'Monsoon',sc:'megh',p:7400,o:10,why:'Living root bridges and thundering waterfalls.',pkg:'Flight + 4N stay + cab sightseeing'},
+{id:7,n:'Rishikesh',st:'Uttarakhand',s:'Autumn',sc:'rish',p:3600,o:25,why:'Rafting, yoga and Ganga aarti, easy on budget.',pkg:'Bus + 2N hostel + rafting 16 km'},
+{id:8,n:'Udaipur',st:'Rajasthan',s:'Autumn',sc:'udai',p:4800,o:14,why:'Lakeside palaces in pleasant weather.',pkg:'Train + 3N heritage stay + boat ride'}];
+const NAMES=[['Aarav','IIT Kanpur','CSE'],['Diya','HBTU','EE'],['Kabir','IIT Kanpur','ME'],['Meera','CSJMU','BBA'],['Rohan','HBTU','CSE'],['Sana','IIT Kanpur','Civil'],['Dr. Verma','HBTU','Faculty'],['Ishaan','KNIT','ECE']];
+const M=i=>({n:NAMES[i][0],c:NAMES[i][1],b:NAMES[i][2]});
+let S={user:null,tab:'explore',users:[],pools:[{id:1,d:1,date:'2026-12-18',type:'Group',aud:'Students',cap:8,mem:[M(0),M(1),M(2)],host:'Aarav'},{id:2,d:3,date:'2027-05-10',type:'Branch-wise',aud:'Students',cap:10,mem:[M(0),M(4)],host:'Aarav',br:'CSE'},{id:3,d:7,date:'2026-11-14',type:'Solo travellers',aud:'Students',cap:6,mem:[M(3)],host:'Meera'},{id:4,d:8,date:'2026-11-28',type:'Group',aud:'Faculty',cap:6,mem:[M(6),M(5)],host:'Dr. Verma'},{id:5,d:5,date:'2027-08-02',type:'Group',aud:'Other',cap:8,mem:[M(7)],host:'Ishaan'}],
+ bookings:[],chats:{0:[{n:'Aarav',t:'Welcome to the Campus Lounge! Ask anything about trips.'}]},room:0,f:{type:'All',aud:'All'}};
+const st=(k,v)=>{try{if(v===undefined)return JSON.parse(localStorage.getItem(k));localStorage.setItem(k,JSON.stringify(v))}catch(e){return null}};
+S.users=st('rp_users')||[];
+const dst=id=>D.find(x=>x.id==id),price=d=>Math.round(d.p*(100-d.o)/100);
+function sceneOld(t,i){const sk={beach:['#7FD4F5','#FFE7B0'],desert:['#FFB36B','#FFE0A8'],mountain:['#A9D5F5','#F4F9FF'],tea:['#C6E8B8','#F0FAE8'],river:['#BDE3F0','#EAF7EF'],lake:['#FFC9A0','#FFEBD6']}[t];
+const g=`g${i}`;let b='';
+if(t=='beach')b='<circle cx="250" cy="52" r="26" fill="#FFB02E"/><path d="M0 110q50-14 100 0t100 0 100 0v50H0z" fill="#1CA3C9"/><path d="M0 130q60-12 120 0t120 0 80 0v30H0z" fill="#F4D58D"/><path d="M60 130v-40" stroke="#7A4A22" stroke-width="5"/><path d="M60 90q-26-6-34 8M60 90q26-6 34 8M60 90q-4-22-22-24M60 90q6-22 24-22" stroke="#2F9E5B" stroke-width="5" fill="none"/>';
+if(t=='desert')b='<circle cx="240" cy="48" r="22" fill="#F26A1B"/><path d="M0 120q60-40 130-10t120-20 70 30v40H0z" fill="#E8A458"/><path d="M0 140q80-30 160 0t160-10v30H0z" fill="#D58C3F"/><path d="M230 116v-26m0 12q-12 0-12-12m12 8q12 0 12-12" stroke="#4E7A3A" stroke-width="5" fill="none"/>';
+if(t=='mountain')b='<path d="M0 140l70-80 40 45 60-75 80 110z" fill="#5C7A99"/><path d="M170 30l-20 28 20-8 12 12z" fill="#fff"/><path d="M70 60l-14 18 14-6 10 10z" fill="#fff"/><path d="M0 160V135q80-20 160 0t160-8v33z" fill="#3F8F5F"/>';
+if(t=='tea')b='<path d="M0 100q80-50 160-10t160-20v90H0z" fill="#6DBB74"/><path d="M0 130q100-30 200 0t120-10v40H0z" fill="#3E9A55"/><g stroke="#2C7A44" stroke-width="3" fill="none"><path d="M20 140q40-10 80 0M120 128q40-10 80 0M210 140q40-10 90 0"/></g><path d="M0 40q40-10 80 0t80 0 80 0 80 0" stroke="#fff" stroke-width="8" opacity=".6" fill="none"/>';
+if(t=='river')b='<path d="M0 110l60-50 50 40 70-60 70 60 70-40v100H0z" fill="#4F8F6A"/><path d="M0 160q60-40 120-20t120 5 80-15v30H0z" fill="#2FA8D2"/><path d="M20 150q40-8 70 0M170 148q40-8 80 0" stroke="#fff" stroke-width="3" fill="none"/>';
+if(t=='lake')b='<circle cx="60" cy="48" r="20" fill="#fff" opacity=".8"/><path d="M60 110V80h30v30zM90 110V70l20-14 20 14v40zM130 110V84h40v26z" fill="#E7C7A3"/><path d="M82 70h8v-10h-8zM100 60h20v10h-20z" fill="#D4A878"/><rect y="110" width="320" height="50" fill="#4FA3C7"/><path d="M60 120h100M70 132h80" stroke="#fff" opacity=".5" stroke-width="3"/>';
+return `<svg viewBox="0 0 320 160" preserveAspectRatio="xMidYMid slice"><defs><linearGradient id="${g}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${sk[0]}"/><stop offset="1" stop-color="${sk[1]}"/></linearGradient></defs><rect width="320" height="160" fill="url(#${g})"/>${b}</svg>`}
+const CL=(x,y,c,w)=>`<use href="#cloud" class="cl ${c}" x="${x}" y="${y}" width="${w}" height="${w*.4}" style="color:#fff;opacity:.92"/>`;
+const SEA=(y,c)=>`<path class="sw" d="M-60 ${y}q40-8 80 0${'t80 0'.repeat(7)}v60H-60z" fill="${c}"/>`;
+function scene(t,i){const dd=D.find(x=>x.sc==t);if(dd&&dd.img)return `<img src="${dd.img}" alt="${dd.n}" style="width:100%;height:100%;object-fit:cover;display:block">`;
+const K={goa:['#7FD4F5','#FFE7B0'],jais:['#FFAE66','#FFE3B0'],manali:['#9CCBF0','#EAF4FF'],spiti:['#8EC5EE','#F6E7D2'],munnar:['#BFE6F0','#E9F8E0'],megh:['#B6D9E8','#E4F4E8'],rish:['#A8DDF2','#EAF7EF'],udai:['#FFBE8A','#FFE8D2']}[t],g='g'+i;let b='';
+if(t=='goa')b=`<circle cx="245" cy="50" r="24" fill="#FFB02E"/>${SEA(100,'#1CA3C9')}<path d="M120 100h30l-6 8h-18z" fill="#fff"/><path d="M135 100V82l14 16z" fill="#FF8A3D"/><path d="M0 128q80-14 160-4t160-4v44H0z" fill="#F4D58D"/><path d="M70 142q6-30 0-58" stroke="#7A4A22" stroke-width="5" fill="none"/><path d="M70 84q-26-4-36 10M70 84q26-4 36 10M70 84q-10-22-30-20M70 84q10-22 30-20" stroke="#2F9E5B" stroke-width="5" fill="none" stroke-linecap="round"/><rect x="190" y="112" width="34" height="22" fill="#F26A1B"/><path d="M184 112l23-18 23 18z" fill="#8A4B24"/>`;
+if(t=='jais')b=`<circle cx="250" cy="56" r="26" fill="#F26A1B" opacity=".9"/><path d="M70 126V76h10v-8h8v8h10v-10h8v10h10v-8h8v8h10v50z" fill="#D9A15B"/><path d="M58 126V88h12v38zM160 126V86h12v40z" fill="#C98E46"/><path d="M104 126v-16a8 8 0 0116 0v16z" fill="#7A4A22"/><path d="M0 130q80-26 160-4t160-12v50H0z" fill="#E8A458"/><path d="M0 148q100-20 200-4t120-6v26H0z" fill="#D58C3F"/>`;
+if(t=='manali')b=`<path d="M0 130l60-72 40 40 52-76 70 108z" fill="#6E8BA8"/><path d="M200 130l50-54 40 36 30-20v38z" fill="#7F9DB8"/><path d="M152 22l-16 24 14-6 10 10zM60 58l-12 16 12-5 8 8z" fill="#fff"/><path d="M0 138q80-10 160 0t160-4v26H0z" fill="#fff"/><path d="M30 142l12-34 12 34zM52 142l10-28 10 28zM250 142l12-36 12 36zM274 142l10-26 10 26z" fill="#2E7D4F"/><rect x="150" y="126" width="26" height="16" fill="#B5703A"/><path d="M146 126l17-14 17 14z" fill="#F26A1B"/>`;
+if(t=='spiti')b=`<path d="M0 118l50-44 40 30 50-50 60 60 50-30 70 50v30H0z" fill="#B8956A"/><path d="M60 120L110 100" stroke="#333"/><path d="M70 117l4 8M84 112l4 8M98 106l4 8" stroke="#F26A1B" stroke-width="4"/><path d="M120 134V98h50v36z" fill="#F7EEDB"/><path d="M130 98V86h30v12z" fill="#fff"/><path d="M140 86l5-12 5 12z" fill="#E0A100"/><rect x="138" y="112" width="8" height="22" fill="#7A3B1E"/><path d="M0 142q100-22 200-4t120-4v26H0z" fill="#9C7B52"/>`;
+if(t=='munnar')b=`<path d="M0 90q80-40 160-8t160-18v110H0z" fill="#79C27E"/><path d="M0 112q90-26 180-4t140-10v62H0z" fill="#4FA862"/><path d="M0 134q100-16 200 0t120-6v32H0z" fill="#2F8A4C"/><path d="M20 120q40-8 80 0M130 114q44-10 90 0M20 146q50-8 100 0M180 142q50-8 110 0" stroke="#1F6B3A" stroke-width="2.5" fill="none"/><rect x="250" y="100" width="22" height="14" fill="#fff"/><path d="M246 100l15-12 15 12z" fill="#C8553D"/><rect y="86" width="320" height="10" fill="#fff" opacity=".45"/>`;
+if(t=='megh')b=`<path d="M0 120l50-50 50 32 60-48 70 60 90-30v66H0z" fill="#5BAA6E"/><path d="M150 56v66" stroke="#fff" stroke-width="9"/><path d="M144 60v62M156 62v60" stroke="#E6F6FF" stroke-width="3"/>${SEA(134,'#38A6C4')}<path d="M200 130q30-34 70 0" stroke="#6B4A2B" stroke-width="6" fill="none"/><path d="M210 126q20-20 50 0" stroke="#8A6A45" stroke-width="3" fill="none"/><circle cx="40" cy="118" r="16" fill="#2F8A4C"/><circle cx="62" cy="122" r="14" fill="#3E9A55"/>`;
+if(t=='rish')b=`<path d="M0 110l60-46 50 36 70-56 70 60 70-34v50H0z" fill="#5E9A7A"/>${SEA(138,'#2FA8D2')}<path d="M60 118h200" stroke="#7A4A22" stroke-width="4"/><path d="M90 140V84h6v56zM224 140V84h6v56z" fill="#555"/><path d="M93 84q67 40 134 0" stroke="#333" stroke-width="2" fill="none"/><path d="M60 118L93 84M260 118L227 84" stroke="#333" stroke-width="2"/><path d="M110 94v24M130 100v18M160 104v14M190 100v18M210 94v24" stroke="#333"/>`;
+if(t=='udai')b=`<path d="M0 108l40-30 50 30zM230 108l50-34 40 34z" fill="#C9A27A"/><path d="M70 110V84h180v26z" fill="#F3D9B1"/><path d="M90 84V72h40v12zM190 84V72h40v12z" fill="#E7C7A3"/><path d="M100 72a10 10 0 0120 0zM200 72a10 10 0 0120 0zM145 84V66a15 15 0 0130 0v18z" fill="#FFF3E0"/><rect y="110" width="320" height="50" fill="#4FA3C7"/><path class="sw" d="M80 120h160M100 130h120M60 142h60M200 142h70" stroke="#fff" opacity=".5" stroke-width="3"/>`;
+return `<svg viewBox="0 0 320 160" preserveAspectRatio="xMidYMid slice"><defs><linearGradient id="${g}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${K[0]}"/><stop offset="1" stop-color="${K[1]}"/></linearGradient></defs><rect width="320" height="160" fill="url(#${g})"/>${CL(20,8,'a',90)}${CL(190,22,'b',70)}${b}</svg>`}
+const BEACH=`<div class="beach" id="bh"><svg viewBox="0 0 1200 300" preserveAspectRatio="xMidYMax slice"><defs><linearGradient id="bs" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FF9A5C"/><stop offset=".65" stop-color="#FFE9D6"/></linearGradient></defs><rect width="1200" height="300" fill="url(#bs)"/><g class="scn"><circle class="sun" cx="900" cy="130" r="54" fill="#FFF6E8"/>${[[80,30,'a',260],[420,60,'b',200],[760,20,'a',300],[1020,74,'b',170]].map(c=>CL(...c)).join('')}<path class="wv" d="M0 190q75-24 150 0${'t150 0'.repeat(9)}v110H0z" fill="#4CC0DE" opacity=".85"/><path class="wv w2" d="M0 218q75-20 150 0${'t150 0'.repeat(9)}v82H0z" fill="#1E9CC4"/><path d="M0 262q300-34 600-8t600 8v46H0z" fill="#F6DDA5"/><path d="M150 274q14-70 4-152" stroke="#7A4A22" stroke-width="9" fill="none"/><path d="M154 122q-50-12-80 18M154 122q50-12 80 18M154 122q-20-44-62-40M154 122q20-44 62-40M154 122q0-36-4-50" stroke="#2F9E5B" stroke-width="9" fill="none" stroke-linecap="round"/><path d="M900 266v-48" stroke="#555" stroke-width="3"/><path d="M860 220q40-44 80 0z" fill="#F26A1B"/></g></svg></div>`;
+let tick=false;
+function onScroll(){if(tick)return;tick=true;requestAnimationFrame(()=>{tick=false;const bh=$('#bh');if(bh)bh.style.setProperty('--k',Math.min(scrollY/300,1));const v=innerHeight;document.querySelectorAll('.pic').forEach(p=>{const r=p.getBoundingClientRect(),t=1-Math.min(Math.max((r.top+r.height/2)/v,0),1);p.style.setProperty('--z',(1+t*.24).toFixed(3))})})}
+addEventListener('scroll',onScroll,{passive:true});
+function toast(t){const e=$('#toast');e.textContent=t;e.classList.add('show');clearTimeout(toast.t);toast.t=setTimeout(()=>e.classList.remove('show'),2400)}
+/* auth */
+let mode='in',adminMode=false;
+function setMode(m){mode=m;document.querySelectorAll('#tabs button').forEach(b=>b.classList.toggle('on',b.dataset.m==m));$('#fup').classList.toggle('hide',m!='up'||adminMode);$('#go').textContent=m=='in'?'Sign in':'Create account';$('#at').textContent=adminMode?'Admin console':m=='in'?'Welcome back':'Join the pool';$('#er').textContent=''}
+$('#tabs').onclick=e=>{if(e.target.dataset.m){if(adminMode)return;setMode(e.target.dataset.m)}};
+$('#adm').onclick=()=>{adminMode=!adminMode;$('#adm').textContent=adminMode?'Back to student login':'Admin login';$('#tabs').classList.toggle('hide',adminMode);$('#demo').innerHTML=adminMode?'Demo admin: <b>admin@roampool.in</b> / <b>Admin@123</b>':'Try it now: <b>student@demo.in</b> / <b>demo123</b>';setMode('in')};
+$('#go').onclick=()=>{const em=$('#em').value.trim().toLowerCase(),pw=$('#pw').value,E=m=>$('#er').textContent=m;
+ if(!em||!pw)return E('Enter your email and password.');
+ if(adminMode){if(em=='admin@roampool.in'&&pw=='Admin@123')return enter({name:'Admin',role:'Admin',email:em,c:'RoamPool HQ',b:'-'});return E('Admin email or password is incorrect.')}
+ if(mode=='up'){const nm=$('#nm').value.trim();if(!nm||!$('#cl').value.trim())return E('Add your name and college.');if(pw.length<6)return E('Use at least 6 characters for the password.');if(S.users.find(u=>u.email==em))return E('This email already has an account. Sign in instead.');
+  const u={name:nm,role:$('#rl').value,email:em,pw,c:$('#cl').value.trim(),b:$('#br').value.trim()||'-'};S.users.push(u);st('rp_users',S.users);return enter(u)}
+ if(em=='student@demo.in'&&pw=='demo123')return enter({name:'Aarav',role:'Student',email:em,c:'IIT Kanpur',b:'CSE'});
+ const u=S.users.find(u=>u.email==em&&u.pw==pw);u?enter(u):E('Email or password is incorrect.')};
+['em','pw'].forEach(i=>$('#'+i).addEventListener('keydown',e=>e.key=='Enter'&&$('#go').click()));
+function enter(u){S.user=u;S.tab=u.role=='Admin'?'admin':'explore';$('#auth').classList.add('out');setTimeout(()=>{$('#auth').classList.add('hide');$('#app').classList.remove('hide');$('#pw').value='';shell();toast('Welcome, '+u.name.split(' ')[0]+'!')},350)}
+$('#out').onclick=()=>{$('#app').classList.add('hide');$('#auth').classList.remove('hide','out');S.user=null;adminMode=false;$('#adm').click();$('#adm').click();toast('You are logged out.')};
+/* shell */
+function shell(){const u=S.user,a=u.role=='Admin';
+ const tabs=a?[['admin','Dashboard'+(S.pools.some(p=>p.status=='pending')?' ('+S.pools.filter(p=>p.status=='pending').length+')':'')],['explore','Destinations'],['pools','Trip pools'],['trips','Custom trips'],['colleges','Colleges'],['profile','Profile']]:[['explore','Destinations'],['pools','Trip pools'],['trips','Custom trips'],['chat','Chat rooms'],['colleges','Colleges'],['profile','Profile']];
+ $('#nav').innerHTML=tabs.map(t=>`<button data-t="${t[0]}" class="${S.tab==t[0]?'on':''}">${t[1]}</button>`).join('');
+ $('#who').innerHTML=`<span class="hav">${AV(u)}</span><b>${esc(u.name)}</b> <span class="tag">${u.role}</span>`;view()}
+$('#nav').onclick=e=>{if(e.target.dataset.t){S.tab=e.target.dataset.t;shell()}};
+function view(){clearInterval(view.i);({explore,pools,chat,admin,trips,colleges,profile})[S.tab]();onScroll();fx();aiCtx()}
+addEventListener('mousemove',e=>{const c=e.target.closest&&e.target.closest('.card');if(c){const r=c.getBoundingClientRect();c.style.setProperty('--mx',e.clientX-r.left+'px');c.style.setProperty('--my',e.clientY-r.top+'px')}},{passive:true});
+function fx(){document.querySelectorAll('.card').forEach((c,i)=>c.style.setProperty('--d',Math.min(i,14)*60+'ms'));document.querySelectorAll('.stat b').forEach(b=>{const n=+b.textContent,t0=performance.now();(function f(t){const k=Math.min((t-t0)/900,1);b.textContent=Math.round(n*(1-Math.pow(1-k,3)));if(k<1)requestAnimationFrame(f)})(t0)})}
+/* explore */
+function explore(){const mine=S.user.role;
+ $('#main').innerHTML=`${BEACH}<h2 style="font-size:34px">Where to, by season</h2><p class="sub">Every destination comes with a ready-to-book student package. Prices are per person; offers are already applied.</p><div class="cols">${SEAS.map(([s,r])=>`<div class="col c-${s}"><h3>${s}<small>${r}</small></h3>${D.filter(d=>d.s==s).map(d=>`<div class="card"><div class="pic">${scene(d.sc,d.id)}<span class="off">${d.o}% off</span><span class="rec">Student pick</span>${S.user.role=='Admin'?'':`<button class="heart ${S.wl.includes(d.id)?'on':''}" aria-label="Save" onclick="heart(${d.id},this)">♥</button>`}</div><div class="cb"><h4>${d.n}</h4><div class="meta">${d.st}</div><div class="why">${d.why}</div><div class="price">₹${price(d).toLocaleString('en-IN')}<s>₹${d.p.toLocaleString('en-IN')}</s></div><div class="pkg"><b>Default package:</b> ${d.pkg}</div>${S.user.role=='Admin'?'<div class="meta">Admin view: edit offers from the Dashboard.</div>':`<div class="row"><button class="btn sm" onclick="book(${d.id})">Book package</button><button class="btn sm ghost" onclick="newPool(${d.id})">Start a pool</button></div>`}</div></div>`).join('')}</div>`).join('')}</div>`}
+function book(id){if(S.user.role=='Admin')return;const d=dst(id);const o=document.createElement('div');o.className='ov';o.innerHTML=`<div class="md"><h3 style="font-size:22px">Book ${d.n}</h3><p class="meta">${d.pkg}</p><label>Travellers</label><input id="bn" type="number" min="1" max="20" value="1"><div class="price" style="margin:14px 0" id="bt"></div><div class="row"><button class="btn ghost" id="bc">Cancel</button><button class="btn" id="bk">Confirm booking</button></div></div>`;document.body.appendChild(o);
+ const t=()=>$('#bt').innerHTML=`Total ₹${(price(d)*Math.max(1,+$('#bn').value||1)).toLocaleString('en-IN')} <s>${d.o}% offer applied</s>`;t();$('#bn').oninput=t;$('#bc').onclick=()=>o.remove();
+ $('#bk').onclick=()=>{const n=Math.max(1,+$('#bn').value||1);S.bookings.push({d:d.n,n,tot:price(d)*n});o.remove();toast(`Booked ${d.n} for ${n}. Check Trip pools for your bookings.`)}}
+/* pools */
+function pools(){const f=S.f,L=S.pools.filter(p=>(p.status!='pending'&&p.status!='rejected'||p.host==S.user.name||S.user.role=='Admin')&&(f.type=='All'||p.type==f.type)&&(f.aud=='All'||p.aud==f.aud));
+ const chips=(k,a)=>['All',...a].map(x=>`<button class="chip ${f[k]==x?'on':''}" onclick="S.f.${k}='${x}';pools()">${x}</button>`).join('');
+ $('#main').innerHTML=`<div style="display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:end"><div><h2 style="font-size:34px">Trip pools</h2><p class="sub">Join a pool going your way, or start one and let others find you.</p></div>${S.user.role=='Admin'?'':'<button class="btn rgbb" onclick="newPool()">Start a pool</button>'}</div>
+ <div id="pf"></div><div class="bar">${chips('type',['Solo travellers','Group','Branch-wise','College-wise'])}<span style="width:10px"></span>${chips('aud',['Students','Faculty','Other'])}</div>
+ <div class="grid">${L.map(p=>{const d=dst(p.d),pp=p.price||price(d),j=p.mem.some(m=>m.n==S.user.name);return `<div class="card"><div class="pic" style="height:100px">${scene(d.sc,'p'+p.id)}<span class="off ${({Group:'s-b','Branch-wise':'s-r','College-wise':'s-p'})[p.type]||'s-g'}">${p.type}</span><span class="rec">${p.aud}</span></div><div class="cb"><h4>${d.n} · ${p.date}</h4>${cd(p.date)}<div class="meta">Hosted by ${esc(p.host)}${p.br?' · '+esc(p.br)+' branch':''}${p.col?' · '+esc(p.col)+' only':''}</div>${p.status=='pending'?'<span class="tagst s-b">Awaiting admin approval</span>':p.status=='rejected'?'<span class="tagst s-r">Price rejected</span>':p.price?'<span class="tagst s-g">Approved price</span>':''}<div class="mem">${p.mem.map(m=>`<span class="av" title="${esc(m.n)}, ${esc(m.c)} ${esc(m.b)}">${esc(m.n[0])}</span>`).join('')}</div><div class="meta">${[...new Set(p.mem.map(m=>m.c))].join(', ')} · ${[...new Set(p.mem.map(m=>m.b))].join(', ')}</div><div class="bar2"><i style="width:${p.mem.length/p.cap*100}%"></i></div><div class="row" style="align-items:center"><span class="price" style="flex:2;font-size:16px">₹${pp.toLocaleString('en-IN')}<s>${pp<price(d)?'₹'+price(d).toLocaleString('en-IN')+' · ':''}${p.cap-p.mem.length} seats left</s></span>${S.user.role=='Admin'?'':j?`<button class="btn sm ghost" onclick="S.tab='chat';S.room=${p.id};shell()">Open chat</button>`:`<button class="btn sm" ${p.cap<=p.mem.length?'disabled':''} onclick="joinPool(${p.id})">${p.col&&p.col!=S.user.c?'🔒 '+esc(p.col)+' only':'Join pool'}</button>`}</div></div></div>`}).join('')||'<p class="sub">No pools match. Start one and be the first.</p>'}</div>
+ ${S.bookings.length&&S.user.role!='Admin'?`<h3 style="margin:28px 0 10px">Your bookings</h3><div class="tw"><table><tr><th>Destination</th><th>Travellers</th><th>Total</th></tr>${S.bookings.map(b=>`<tr><td>${b.d}</td><td>${b.n}</td><td>₹${b.tot.toLocaleString('en-IN')}</td></tr>`).join('')}</table></div>`:''}`}
+function joinPool(id){if(S.user.role=='Admin')return toast('Admins manage pools and cannot join them.');const p=S.pools.find(x=>x.id==id),u=S.user;if(p.col&&p.col!=u.c)return toast('This pool is only for '+p.col+' students.');p.mem.push({n:u.name,c:u.c,b:u.b});S.chats[id]=S.chats[id]||[{n:p.host,t:'Welcome to the trip chat! Let’s plan dates and stay.'}];toast('You joined the pool.');pools()}
+function newPool(did){if(S.user.role=='Admin')return toast('Admins manage pools and cannot start them.');if(S.tab!='pools'){S.tab='pools';shell()}const el=$('#pf');el.innerHTML=`<div class="form"><h3>Start a pool</h3><div class="fg"><div><label>Destination</label><select id="pd">${D.map(d=>`<option value="${d.id}" ${d.id==did?'selected':''}>${d.n} (${d.s})</option>`).join('')}</select></div><div><label>Date</label><input id="pt" type="date"></div><div><label>Pool type</label><select id="py"><option>Group</option><option>Solo travellers</option><option>Branch-wise</option><option>College-wise</option></select></div><div><label>Open to</label><select id="pa"><option>Students</option><option>Faculty</option><option>Other</option></select></div><div><label>Seats</label><input id="ps" type="number" min="2" max="30" value="6"></div><div><label>Bargain: your price per person (₹)</label><input id="pb" type="number" min="1" placeholder="Optional"><div class="meta" id="ph" style="margin-top:4px"></div><button type="button" class="btn sm ghost" style="margin-top:6px" onclick="aiPrice()">✨ AI: suggest a fair price</button></div></div><p class="meta" style="margin:10px 0 0">Offer a lower price for your group. The admin reviews it and approves, changes or rejects it before the pool goes live. Pools without an offer go live straight away.</p><div class="row" style="margin-top:14px"><button class="btn ghost" onclick="$('#pf').innerHTML=''">Cancel</button><button class="btn rgbb" id="pc">Create pool</button></div></div>`;el.scrollIntoView({behavior:'smooth'});const hint=()=>{const d=dst(+$('#pd').value),b=+$('#pb').value,l=price(d);$('#ph').textContent=b?(b<l?`Offering ${Math.round((1-b/l)*100)}% below the listed ₹${l.toLocaleString('en-IN')}. Admin will review it.`:'At or above list price. Admin will still review it.'):`Listed price is ₹${l.toLocaleString('en-IN')} per person.`};$('#pb').oninput=hint;$('#pd').onchange=hint;hint();
+ $('#pc').onclick=()=>{const u=S.user,id=Date.now(),t=$('#py').value,bid=Math.max(0,+$('#pb').value||0);S.pools.unshift({id,d:+$('#pd').value,date:$('#pt').value||'Date to be decided',type:t,aud:$('#pa').value,cap:+$('#ps').value||6,mem:[{n:u.name,c:u.c,b:u.b}],host:u.name,br:t=='Branch-wise'?u.b:undefined,col:t=='College-wise'?u.c:undefined,bid:bid,status:bid?'pending':'live'});S.chats[id]=[{n:'RoamPool',t:'Pool created. Share the plan with new members here.'}];toast(bid?'Pool sent to admin for price approval.':'Pool created.');pools()}}
+/* chat */
+const BOT=['Anyone checking train timings?','I can split the stay cost 4 ways.','Which date works for everyone?','Booking the package tonight, join in!','Pack light, it’s a sleeper journey.','Is there someone from another branch joining?'];
+function chat(){const u=S.user,mine=S.pools.filter(p=>p.mem.some(m=>m.n==u.name));const rooms=[{id:0,n:'Campus Lounge',s:'Everyone on RoamPool'},...mine.map(p=>({id:p.id,n:dst(p.d).n+' pool',s:p.type+' · '+p.mem.length+' members'}))];if(!rooms.find(r=>r.id==S.room))S.room=0;
+ $('#main').innerHTML=`<h2 style="font-size:34px">Chat rooms</h2><p class="sub">Join a pool to unlock its private room. The Campus Lounge is open to all.</p><div class="chat"><div class="rooms">${rooms.map(r=>`<button class="${r.id==S.room?'on':''}" onclick="S.room=${r.id};chat()">${esc(r.n)}<small>${esc(r.s)}</small></button>`).join('')}</div><div class="cm"><div class="top">${esc(rooms.find(r=>r.id==S.room).n)}</div><div class="msgs" id="ms"></div><div class="typing" id="ty"></div><div class="send"><input id="ci" placeholder="Message the room" autocomplete="off"><button class="btn rgbb" id="cs">Send</button></div></div></div>`;
+ const draw=()=>{const ms=$('#ms');ms.innerHTML=(S.chats[S.room]||[]).map(m=>`<div class="m ${m.n==u.name?'me':''}"><small>${esc(m.n)}</small>${esc(m.t)}</div>`).join('');ms.scrollTop=ms.scrollHeight};draw();
+ const reply=()=>{const p=S.pools.find(x=>x.id==S.room),who=p?p.mem.filter(m=>m.n!=u.name):NAMES.map((n,i)=>M(i));if(!who.length)return;const w=who[Math.floor(Math.random()*who.length)];$('#ty').textContent=w.n+' is typing…';setTimeout(()=>{(S.chats[S.room]=S.chats[S.room]||[]).push({n:w.n,t:BOT[Math.floor(Math.random()*BOT.length)]});if(S.tab=='chat'){$('#ty').textContent='';draw()}},1400)};
+ const send=()=>{const v=$('#ci').value.trim();if(!v)return;(S.chats[S.room]=S.chats[S.room]||[]).push({n:u.name,t:v});$('#ci').value='';draw();setTimeout(reply,900)};
+ $('#cs').onclick=send;$('#ci').onkeydown=e=>e.key=='Enter'&&send();view.i=setInterval(reply,15000)}
+/* admin */
+const PEND=()=>S.pools.filter(p=>p.status=='pending');
+function appr(id,ok){const p=S.pools.find(x=>x.id==id);if(ok){p.price=Math.max(1,+$('#ap'+id).value||p.bid);p.status='live';toast('Pool approved at ₹'+p.price.toLocaleString('en-IN')+'.')}else{p.status='rejected';toast('Pool rejected.')}shell()}
+function admin(){const all=[...S.users];$('#main').innerHTML=`<h2 style="font-size:34px">Admin dashboard</h2><p class="sub">Watch activity, manage pools and keep the community safe.</p>
+ <div class="stats"><div class="stat"><b>${S.pools.filter(p=>p.status!='pending'&&p.status!='rejected').length}</b>Active pools</div><div class="stat"><b>${S.pools.reduce((a,p)=>a+p.mem.length,0)}</b>Pool members</div><div class="stat"><b>${all.length+1}</b>Registered users</div><div class="stat"><b>${D.length}</b>Destinations</div><div class="stat"><b>${S.trips.length}</b>Custom trips</div></div>
+ <h3 style="margin-bottom:10px">Price approval requests</h3><div class="tw"><table><tr><th>Destination</th><th>Host</th><th>Group</th><th>Listed</th><th>Offered</th><th>Your decision</th></tr>${PEND().map(p=>{const d=dst(p.d),l=price(d);return `<tr><td>${d.n}<div class="meta">${p.type} · ${p.aud}</div></td><td>${esc(p.host)}</td><td>${p.mem.length}/${p.cap}</td><td>₹${l.toLocaleString('en-IN')}</td><td><b>₹${p.bid.toLocaleString('en-IN')}</b> <span class="tag">${p.bid<l?Math.round((1-p.bid/l)*100)+'% off':'at or above list'}</span></td><td style="white-space:nowrap"><input id="ap${p.id}" type="number" value="${p.bid}" style="width:100px;display:inline-block"> <button class="btn sm s-g" onclick="appr(${p.id},1)">Approve</button> <button class="btn sm s-r" onclick="appr(${p.id},0)">Reject</button></td></tr>`}).join('')||'<tr><td colspan="6">No requests waiting. New bargains will appear here.</td></tr>'}</table></div>
+ <h3 style="margin-bottom:10px">Trip pools</h3><div class="tw"><table><tr><th>Destination</th><th>Type</th><th>Open to</th><th>Members</th><th>Host</th><th></th></tr>${S.pools.filter(p=>p.status!='pending').map(p=>`<tr><td>${dst(p.d).n}</td><td>${p.type}</td><td>${p.aud}</td><td>${p.mem.length}/${p.cap}</td><td>${esc(p.host)}</td><td><button class="btn sm ghost" onclick="S.pools=S.pools.filter(x=>x.id!=${p.id});admin();toast('Pool removed.')">Remove</button></td></tr>`).join('')}</table></div>
+ ${adminX()}<h3 style="margin-bottom:10px">Offers</h3><div class="tw"><table><tr><th>Destination</th><th>Offer %</th><th>Final price</th></tr>${D.map(d=>`<tr><td>${d.n}</td><td><input type="number" min="0" max="60" value="${d.o}" style="width:90px" onchange="dst(${d.id}).o=Math.min(60,Math.max(0,+this.value||0));admin();toast('Offer updated.')"></td><td>₹${price(d).toLocaleString('en-IN')}</td></tr>`).join('')}</table></div>
+ <h3 style="margin-bottom:10px">Registered users</h3><div class="tw"><table><tr><th>Name</th><th>Role</th><th>College</th><th>Email</th></tr>${all.map(u=>`<tr><td>${esc(u.name)}</td><td>${u.role}</td><td>${esc(u.c)}</td><td>${esc(u.email)}</td></tr>`).join('')||'<tr><td colspan="4">No sign-ups yet.</td></tr>'}</table></div>`}
+/* v3 */
+const CG=[['IIT Kanpur','Kanpur','Uttar Pradesh'],['IIT Delhi','New Delhi','Delhi'],['IIT Bombay','Mumbai','Maharashtra'],['IIT Madras','Chennai','Tamil Nadu'],['IIT Kharagpur','Kharagpur','West Bengal'],['IIT Roorkee','Roorkee','Uttarakhand'],['IIT BHU','Varanasi','Uttar Pradesh'],['IIT Guwahati','Guwahati','Assam'],['IIT Jodhpur','Jodhpur','Rajasthan'],['IIT Mandi','Mandi','Himachal Pradesh'],['IIT Bhubaneswar','Bhubaneswar','Odisha'],['IISc Bangalore','Bengaluru','Karnataka'],['IIIT Hyderabad','Hyderabad','Telangana'],['NIT Trichy','Tiruchirappalli','Tamil Nadu'],['NIT Warangal','Warangal','Telangana'],['NIT Surathkal','Mangaluru','Karnataka'],['NIT Calicut','Kozhikode','Kerala'],['NIT Rourkela','Rourkela','Odisha'],['NIT Srinagar','Srinagar','J&K'],['NIT Meghalaya','Shillong','Meghalaya'],['MNNIT Allahabad','Prayagraj','Uttar Pradesh'],['MNIT Jaipur','Jaipur','Rajasthan'],['BITS Pilani','Pilani','Rajasthan'],['VIT Vellore','Vellore','Tamil Nadu'],['SRM Chennai','Chennai','Tamil Nadu'],['Anna University','Chennai','Tamil Nadu'],['Delhi University','New Delhi','Delhi'],['JNU','New Delhi','Delhi'],['Jamia Millia Islamia','New Delhi','Delhi'],['Jadavpur University','Kolkata','West Bengal'],['Presidency University','Kolkata','West Bengal'],['Banaras Hindu University','Varanasi','Uttar Pradesh'],['Aligarh Muslim University','Aligarh','Uttar Pradesh'],['HBTU','Kanpur','Uttar Pradesh'],['CSJMU','Kanpur','Uttar Pradesh'],['KNIT','Sultanpur','Uttar Pradesh'],['AKTU','Lucknow','Uttar Pradesh'],['Lucknow University','Lucknow','Uttar Pradesh'],['Manipal Institute of Technology','Manipal','Karnataka'],['Christ University','Bengaluru','Karnataka'],['Osmania University','Hyderabad','Telangana'],['SPPU Pune','Pune','Maharashtra'],['COEP Pune','Pune','Maharashtra'],['Mumbai University','Mumbai','Maharashtra'],['Panjab University','Chandigarh','Chandigarh'],['Thapar Institute','Patiala','Punjab'],['CUSAT Kochi','Kochi','Kerala'],['Gujarat University','Ahmedabad','Gujarat'],['Tezpur University','Tezpur','Assam']];
+document.body.insertAdjacentHTML('beforeend','<datalist id="clg">'+CG.map(c=>`<option value="${c[0]}">`).join('')+'</datalist>');
+const INTS=['Beaches','Mountains','Trekking','Food trails','Photography','Heritage','Road trips','Camping','Backpacking','Wildlife','Spiritual','Nightlife'],EMO=['😎','🏖️','🏔️','🎒','📸','🌴','🚴','⛺','🦋','🧭'];
+const TR=['Train','Bus','Flight','Cab','Bike ride'],SY=['Hostel','Homestay','Camp','Hotel'],EX=['Meals','Guide','Insurance','Photographer','Bonfire','Activities'];
+const WAVE=`<div class="wv2"><svg viewBox="0 0 1200 40" preserveAspectRatio="none"><path d="M0 20q75-18 150 0${'t150 0'.repeat(9)}v20H0z" fill="#7FDCE8"/><path class="b" d="M0 26q75-14 150 0${'t150 0'.repeat(9)}v14H0z" fill="#17A9BD"/></svg></div>`;
+S.trips=[
+{id:101,t:'Spiti Backpackers Circuit',from:'Delhi',to:'Kaza, Spiti',date:'2027-06-05',days:7,cap:12,bud:14000,aud:'Students',arr:['Bus','Homestay','Guide'],note:'Shared cab from Manali, one rest day to acclimatise.',host:'Rhea',mem:[{n:'Rhea',c:'IIT Delhi',b:'EE'},{n:'Arjun',c:'BITS Pilani',b:'CSE'},{n:'Tanvi',c:'Delhi University',b:'Eng'}]},
+{id:102,t:'Coorg Coffee Weekend',from:'Bengaluru',to:'Coorg',date:'2026-12-04',days:3,cap:8,bud:5200,aud:'Students',arr:['Cab','Homestay','Meals'],note:'Plantation walk, bonfire night, split the cab four ways.',host:'Karthik',mem:[{n:'Karthik',c:'VIT Vellore',b:'IT'},{n:'Neha',c:'NIT Surathkal',b:'ECE'},{n:'Zoya',c:'Christ University',b:'BBA'}]},
+{id:103,t:'Hampi Heritage Ride',from:'Hyderabad',to:'Hampi',date:'2027-01-16',days:4,cap:10,bud:6800,aud:'Other',arr:['Train','Hostel','Bike ride'],note:'Rent bicycles, sunrise at Matanga hill.',host:'Ishita',mem:[{n:'Ishita',c:'IIIT Hyderabad',b:'CSE'},{n:'Dev',c:'Osmania University',b:'Civil'}]},
+{id:104,t:'Kashi Ganga Aarti Run',from:'Prayagraj',to:'Varanasi',date:'2026-11-21',days:2,cap:10,bud:1800,aud:'Students',arr:['Bus','Hostel'],note:'Evening aarti, boat ride, kachori breakfast.',host:'Pooja',mem:[{n:'Pooja',c:'MNNIT Allahabad',b:'CSE'},{n:'Sameer',c:'Banaras Hindu University',b:'Law'},{n:'Aarav',c:'IIT Kanpur',b:'CSE'}]}];
+const going=c=>[...S.pools.filter(p=>p.status!='pending'&&p.status!='rejected'&&p.mem.some(m=>m.c==c)).map(p=>({k:'Pool',d:dst(p.d).n,t:p.date,tab:'pools',n:p.mem.filter(m=>m.c==c).length})),...S.trips.filter(t=>t.mem.some(m=>m.c==c)).map(t=>({k:'Custom',d:t.to,t:t.date,tab:'trips',n:t.mem.filter(m=>m.c==c).length}))];
+const f$=x=>'₹'+x.toLocaleString('en-IN');
+
+/* custom trips */
+const tg=a=>a.map(x=>`<button type="button" class="chip ar" onclick="this.classList.toggle('on')">${x}</button>`).join('');
+const tripCard=t=>{const ad=S.user.role=='Admin',j=t.mem.some(m=>m.n==S.user.name),left=t.cap-t.mem.length,sc=['goa','manali','munnar','udai','rish','megh','spiti','jais'][t.id%8];
+return `<div class="card tc"><div class="pic" style="height:120px">${t.imgs&&t.imgs[0]?`<img src="${t.imgs[0]}" alt="${esc(t.to)}" style="width:100%;height:100%;object-fit:cover;display:block;cursor:zoom-in" onclick="zoom(this.src)">`:scene(sc,'t'+t.id)}${t.imgs&&t.imgs.length>1?`<span class="rec" style="top:auto;bottom:8px;right:auto;left:10px">📷 ${t.imgs.length}</span>`:''}<span class="off">${t.days} days</span><span class="rec">${esc(t.aud)}</span></div><div class="cb"><h4>${esc(t.t)}</h4><div class="meta">${esc(t.from)} → ${esc(t.to)} · ${esc(t.date)}</div><div class="chips">${t.arr.map(a=>`<span class="tag">${esc(a)}</span>`).join('')}</div>${t.note?`<div class="why">${esc(t.note)}</div>`:''}<div class="meta">Colleges: ${[...new Set(t.mem.map(m=>m.c))].map(esc).join(', ')}</div><div class="meta">Hosted by ${esc(t.host)}</div><div class="bar2"><i style="width:${t.mem.length/t.cap*100}%"></i></div><div class="row" style="align-items:center"><span class="price" style="flex:2;font-size:16px">${f$(t.bud)}<s>${left} seats left</s></span>${ad?`<button class="btn sm ghost" onclick="rmTrip(${t.id})">Remove</button>`:j?'<span class="tagst s-g">Joined</span>':`<button class="btn sm" ${left<=0?'disabled':''} onclick="joinTrip(${t.id})">Join trip</button>`}</div></div></div>`};
+function trips(){$('#main').innerHTML=`${WAVE}<div style="display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:end"><div><h2 style="font-size:34px">Custom trips</h2><p class="sub">Going somewhere that is not on the menu? Design your own trip, set the arrangements and let students from colleges across India join.</p></div>${S.user.role=='Admin'?'':'<button class="btn rgbb" onclick="newTrip()">Plan a custom trip</button>'}</div><div id="tf"></div><div class="grid">${S.trips.map(tripCard).join('')}</div>`}
+function joinTrip(id){if(S.user.role=='Admin')return toast('Admins manage trips and cannot join them.');const t=S.trips.find(x=>x.id==id),u=S.user;if(t.mem.length>=t.cap)return toast('That trip is full.');t.mem.push({n:u.name,c:u.c,b:u.b});toast('You joined '+t.t+'.');trips();fx()}
+function newTrip(){if(S.user.role=='Admin')return toast('Admins manage trips and cannot plan them.');const el=$('#tf'),u=S.user;el.innerHTML=`<div class="form"><h3>Plan a custom trip</h3><div class="fg"><div><label>Trip title</label><input id="tt" placeholder="Hampi Heritage Ride"></div><div><label>Starting from</label><input id="tfm" value="${esc(u.city||'')}" placeholder="Your city"></div><div><label>Going to (anywhere in India)</label><input id="tto"></div><div><label>Start date</label><input id="tdt" type="date"></div><div><label>Days</label><input id="tdy" type="number" min="1" max="30" value="4"></div><div><label>Seats</label><input id="tcp" type="number" min="2" max="40" value="8"></div><div><label>Budget per person (₹)</label><input id="tbd" type="number" min="0" value="6000"></div><div><label>Open to</label><select id="tau"><option>Students</option><option>Faculty</option><option>Other</option></select></div></div><label>Transport</label><div class="chips">${tg(TR)}</div><label>Stay</label><div class="chips">${tg(SY)}</div><label>Extras</label><div class="chips">${tg(EX)}</div><label>Photos of the location (up to 4)</label><div class="dz" id="tdz" tabindex="0" role="button" aria-label="Upload location photos"><svg viewBox="0 0 64 64"><rect x="6" y="12" width="52" height="40" rx="8" fill="#E6F7FA" stroke="#0A9DB5" stroke-width="3"/><circle cx="22" cy="26" r="5" fill="#FFD34D"/><path d="M8 46l16-14 12 10 8-6 12 10" stroke="#7C4DFF" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg><b>Drag &amp; drop location photos here</b><span>or click to browse · JPG, PNG</span><input id="tdf" type="file" accept="image/*" multiple hidden></div><div class="ths" id="tth"></div><label>Your own arrangements and rules</label><textarea id="tnt" placeholder="Pickup points, dress code, split rules, anything custom"></textarea><div class="row" style="margin-top:14px"><button class="btn ghost" onclick="$('#tf').innerHTML=''">Cancel</button><button class="btn ghost" onclick="aiArr()">✨ Suggest arrangements</button><button class="btn rgbb" id="tgo">Publish trip</button></div></div>`;el.scrollIntoView({behavior:'smooth'});
+$('#tgo').onclick=()=>{const t=$('#tt').value.trim(),to=$('#tto').value.trim();if(!t||!to)return toast('Add a title and a destination.');S.trips.unshift({id:Date.now(),t,from:$('#tfm').value.trim()||'Anywhere',to,date:$('#tdt').value||'Date to be decided',days:+$('#tdy').value||3,cap:+$('#tcp').value||8,bud:+$('#tbd').value||0,aud:$('#tau').value,arr:[...el.querySelectorAll('.ar.on')].map(x=>x.textContent),note:$('#tnt').value.trim(),imgs:(S.timgs||[]).slice(),host:u.name,mem:[{n:u.name,c:u.c,b:u.b}]});toast('Custom trip published.');trips();fx()}}
+function aiArr(){const b=+$('#tbd').value||0,d=+$('#tdy').value||3,w=b<6000?['Bus','Hostel','Meals']:b<15000?['Train','Homestay','Guide','Meals']:['Flight','Hotel','Guide','Insurance','Photographer'];if(d>5)w.push('Insurance');document.querySelectorAll('#tf .ar').forEach(x=>x.classList.toggle('on',w.includes(x.textContent)));if(!$('#tnt').value)$('#tnt').value=`Keep ${f$(Math.round(b*.15))} per person as buffer, pick one treasurer, share live location on travel days.`;toast('Arrangements suggested. Tweak freely.')}
+function aiPrice(){const d=dst(+$('#pd').value),l=price(d),k=+($('#ps')||{}).value||6,off=Math.min(18,6+k);$('#pb').value=Math.round(l*(1-off/100)/10)*10;$('#pb').oninput();toast(`Suggested ${off}% under list for a group of ${k}.`)}
+
+/* colleges */
+function drawCol(){const q=(S.cq||'').toLowerCase(),sf=S.cs||'All';$('#cl2').innerHTML=CG.map((c,i)=>[c,i]).filter(([c])=>(sf=='All'||c[2]==sf)&&c.join(' ').toLowerCase().includes(q)).map(([c,i])=>{const g=going(c[0]);return `<div class="card cc" style="--h:${i*37%360};cursor:pointer" onclick="openCol(${i})"><div class="cstrip"></div><div class="cb"><h4>${esc(c[0])}</h4><div class="meta">${esc(c[1])}, ${esc(c[2])}</div><div class="chips">${g.slice(0,3).map(x=>`<span class="tag">✈ ${esc(x.d)}</span>`).join('')||'<span class="meta">No trips yet</span>'}</div><div class="meta"><b>${g.length}</b> trip${g.length==1?'':'s'} going</div></div></div>`}).join('')||'<p class="sub">No college matches.</p>';fx()}
+function colleges(){const sts=[...new Set(CG.map(c=>c[2]))].sort();$('#main').innerHTML=`${WAVE}<h2 style="font-size:34px">Colleges across India</h2><p class="sub">${CG.length} colleges listed. Open one to see where its students are heading.</p><div class="bar"><input id="cq" placeholder="Search college, city or state" style="max-width:320px" value="${esc(S.cq||'')}"><select id="csel" style="max-width:220px"><option>All</option>${sts.map(s=>`<option ${s==S.cs?'selected':''}>${esc(s)}</option>`).join('')}</select></div><div class="grid" id="cl2"></div>`;$('#cq').oninput=e=>{S.cq=e.target.value;drawCol()};$('#csel').onchange=e=>{S.cs=e.target.value;drawCol()};drawCol()}
+function openCol(i){const c=CG[i],g=going(c[0]),nm=[...new Set([...S.pools,...S.trips].flatMap(p=>p.mem).filter(m=>m.c==c[0]).map(m=>m.n))],o=document.createElement('div');o.className='ov';o.innerHTML=`<div class="md"><h3 style="font-size:22px">${esc(c[0])}</h3><p class="meta">${esc(c[1])}, ${esc(c[2])} · ${nm.length} traveller${nm.length==1?'':'s'}: ${nm.map(esc).join(', ')||'none yet'}</p><div style="max-height:260px;overflow:auto">${g.map(x=>`<div class="gr"><div><b>${esc(x.d)}</b><div class="meta">${x.k} · ${esc(x.t)} · ${x.n} from here</div></div><button class="btn sm ghost" data-t="${x.tab}">Open</button></div>`).join('')||'<p class="meta">Nobody from here has joined a trip yet. Be the first.</p>'}</div><div class="row" style="margin-top:14px"><button class="btn ghost" id="cx">Close</button></div></div>`;document.body.appendChild(o);o.onclick=e=>{if(e.target==o||e.target.id=='cx')o.remove();else if(e.target.dataset.t){S.tab=e.target.dataset.t;o.remove();shell()}}}
+
+/* profile */
+function bioAI(){const u=S.user,it=[...document.querySelectorAll('.io.on')].map(x=>x.textContent),l=(it.length?it:u.ints||[]).slice(0,3);return `I am ${$('#fn')?$('#fn').value:u.name}, ${u.role=='Faculty'?'faculty':'a student'} at ${u.c}. I love ${l.length?l.join(', ').toLowerCase():'exploring new places'} and travel as a ${(u.style||'budget backpacker').toLowerCase()}. Always up for a pool going somewhere new.`}
+function profile(){const u=S.user,a=u.role=='Admin',np=S.pools.filter(p=>p.mem.some(m=>m.n==u.name)).length,nt=S.trips.filter(t=>t.mem.some(m=>m.n==u.name)).length,op=(arr,v)=>arr.map(x=>`<option ${v==x?'selected':''}>${x}</option>`).join('');
+$('#main').innerHTML=`${WAVE}<h2 style="font-size:34px">Your profile</h2><p class="sub">Tell travel buddies who you are. Changes show up in pools, trips, chat and your college page.</p><div class="pf"><div class="pcard"><div class="bigav" id="bav">${AV(u)}</div><h3>${esc(u.name)}</h3><div class="meta">${esc(u.role)} · ${esc(u.c)}</div><div class="meta">${esc(u.bio||'No bio yet')}</div><div class="chips" style="justify-content:center">${(u.ints||[]).map(x=>`<span class="tag">${esc(x)}</span>`).join('')}</div><div class="stats"><div class="stat"><b>${np}</b>Pools</div><div class="stat"><b>${nt}</b>Trips</div><div class="stat"><b>${S.wl.length}</b>Saved</div></div></div>
+<div class="form" style="margin:0"><div class="fg"><div><label>Full name</label><input id="fn" value="${esc(u.name)}"></div><div><label>I am a</label><select id="fr" ${a?'disabled':''}>${op(['Student','Faculty','Other'],u.role)}</select></div><div><label>College</label><input id="fc" list="clg" value="${esc(u.c)}"></div><div><label>Branch or department</label><input id="fb" value="${esc(u.b=='-'?'':u.b||'')}"></div><div><label>Year or designation</label><input id="fy" value="${esc(u.yr||'')}" placeholder="3rd year"></div><div><label>Home city</label><input id="fh" value="${esc(u.city||'')}"></div><div><label>Travel style</label><select id="fs">${op(['Budget backpacker','Comfort seeker','Adventure junkie','Culture explorer'],u.style)}</select></div></div><label>About me</label><textarea id="fbio" placeholder="A line or two for your travel buddies">${esc(u.bio||'')}</textarea><button class="btn sm ghost" style="margin-top:6px" onclick="$('#fbio').value=bioAI()">✨ AI: write my bio</button><label>Interests</label><div class="chips">${INTS.map(x=>`<button type="button" class="chip io ${(u.ints||[]).includes(x)?'on':''}" onclick="this.classList.toggle('on')">${x}</button>`).join('')}</div><label>Profile photo</label><div class="dz" id="dz" tabindex="0" role="button" aria-label="Upload profile photo"><svg viewBox="0 0 64 64"><path d="M18 44a12 12 0 01-1-24 16 16 0 0130-3 13 13 0 013 27" fill="#E6F7FA" stroke="#0A9DB5" stroke-width="3" stroke-linecap="round"/><path d="M32 54V30M24 38l8-8 8 8" stroke="#7C4DFF" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg><b>Drag &amp; drop a photo here</b><span>or click to browse · cropped to a circle</span>${u.photo?'<button type="button" class="btn sm ghost" id="dzr">Remove photo</button>':''}<input id="dzf" type="file" accept="image/*" hidden></div><label>Or pick an emoji avatar</label><div class="chips">${EMO.map(x=>`<button type="button" class="chip eo ${u.em==x?'on':''}" onclick="document.querySelectorAll('.eo').forEach(y=>y.classList.remove('on'));this.classList.add('on')">${x}</button>`).join('')}</div><div class="row" style="margin-top:14px"><button class="btn rgbb" onclick="saveProf()">Save profile</button></div></div></div>`}
+function saveProf(){const u=S.user,old=u.name,nm=$('#fn').value.trim();if(!nm)return toast('Name cannot be empty.');
+Object.assign(u,{name:nm,role:u.role=='Admin'?'Admin':$('#fr').value,c:$('#fc').value.trim()||u.c,b:$('#fb').value.trim()||'-',yr:$('#fy').value.trim(),city:$('#fh').value.trim(),style:$('#fs').value,bio:$('#fbio').value.trim(),ints:[...document.querySelectorAll('.io.on')].map(x=>x.textContent),em:(document.querySelector('.eo.on')||{}).textContent||''});
+if(S.users.includes(u))st('rp_users',S.users);
+[...S.pools,...S.trips].forEach(p=>{p.mem.forEach(m=>{if(m.n==old){m.n=u.name;m.c=u.c;m.b=u.b}});if(p.host==old)p.host=u.name});
+Object.values(S.chats||{}).forEach(a=>Array.isArray(a)&&a.forEach(m=>{if(m.n==old)m.n=u.name}));toast('Profile saved.');shell()}
+
+/* RoamBot: a built-in rule-based helper, not a live LLM */
+const TAG={goa:'beach party sea cheap friends nightlife chill',jais:'desert fort camel heritage sunset',manali:'snow mountain cold adventure rafting',spiti:'mountain monastery stars offbeat cold trek',munnar:'tea hills green rain misty couple',megh:'waterfall rain bridges nature trek',rish:'raft yoga river adventure cheap spiritual',udai:'lake palace romantic heritage boat'};
+const AIQ={explore:['Beach trip under ₹5000','Cold and scenic in summer','Plan 4 days in Goa'],pools:['How do I bargain?','Split ₹12000 between 4','Icebreaker for my pool'],trips:['Suggest arrangements','Plan 5 days in Hampi','Split ₹30000 between 5'],chat:['Give me an icebreaker','Split ₹9000 between 3'],colleges:['How do I find my college?','Trips from my college'],profile:['Write my bio'],admin:['How do I review bargains?']};
+function rec(s){const m=s.replace(/,/g,'').match(/(\d+)\s*(k)?/),b0=m?+m[1]*(m[2]?1000:1):0,b=b0>=500?b0:0,se=SEAS.map(x=>x[0].toLowerCase()).find(x=>s.includes(x)),w=s.split(/\W+/);
+return 'Top picks for you:<br>'+D.map(d=>({d,sc:TAG[d.sc].split(' ').filter(t=>w.includes(t)).length*2+(se&&d.s.toLowerCase()==se?2:0)+(b?(price(d)<=b?2:-4):0)})).sort((a,c)=>c.sc-a.sc).slice(0,3).map(x=>`<b>${esc(x.d.n)}</b> (${esc(x.d.s)}) ${f$(price(x.d))}<br><small>${esc(x.d.pkg)}</small>`).join('<br>')+'<br>Open Destinations to book or start a pool.'}
+function ai(q){const s=q.toLowerCase(),n=(s.replace(/,/g,'').match(/\d+/g)||[]).map(Number),u=S.user;
+if(/split|each|per head/.test(s)&&n.length>1)return `${f$(n[0])} between ${n[1]} people is <b>${f$(Math.ceil(n[0]/n[1]))}</b> each. Add about 10% for food and local cabs.`;
+if(/bargain|negotiat|offer/.test(s))return 'For pools of 6 or more, asking 8 to 12% under list usually gets approved. Mention your group size. In the pool form, tap <b>AI: suggest a fair price</b>.';
+if(/approve|review|reject/.test(s))return 'Open Dashboard, compare Offered with Listed, edit the price if needed, then Approve or Reject.';
+if(/bio|about me/.test(s))return esc(bioAI());
+if(/arrange/.test(s))return 'Open Custom trips, plan a trip and press <b>Suggest arrangements</b>. I match transport and stay to your budget and days.';
+if(/icebreak|chat/.test(s))return ['Which date works for everyone?','Anyone from another branch joining? Let us make it a mixed gang.','Quick poll: train or bus?'][Math.random()*3|0];
+if(/my college/.test(s)){const g=going(u.c);return g.length?`From ${esc(u.c)}: `+g.map(x=>esc(x.d)).join(', ')+'. See the Colleges tab for who is going.':`Nobody from ${esc(u.c)} is on a trip yet. Start one.`}
+if(/itinerar|plan/.test(s)){const d=D.find(x=>s.includes(x.n.toLowerCase())),k=Math.min(n[0]||3,7),pl=(s.match(/in ([a-z ]+)$/)||[])[1];if(!d&&!pl)return 'Tell me a place and days, like "Plan 4 days in Goa".';const nm=d?d.n:pl;return `<b>${esc(nm)}, ${k} days</b><br>Day 1: arrive and settle in.${d?' '+esc(d.pkg)+'.':''}<br>${Array.from({length:Math.max(k-2,0)},(_,i)=>`Day ${i+2}: ${i%2?'free day, cafes and a local walk':d?esc(d.why):'main sights with a local guide'}`).join('<br>')}<br>Day ${k}: souvenirs and head back.`}
+if(/what can|help|how/.test(s))return 'Ask for a trip ("beach under ₹5000"), an itinerary, a cost split, a bio, or help with pools and approvals.';
+return rec(s)}
+function aiMsg(h,u){const m=$('#aim');m.insertAdjacentHTML('beforeend',`<div class="${u?'u':''}">${h}</div>`);m.scrollTop=m.scrollHeight}
+function askAI(t){t=t.trim();if(!t)return;aiMsg(esc(t),1);const m=$('#aim');m.insertAdjacentHTML('beforeend','<div class="dots" id="dt"><i></i><i></i><i></i></div>');m.scrollTop=m.scrollHeight;setTimeout(()=>{const d=$('#dt');if(d)d.remove();aiMsg(ai(t))},600)}
+function aiCtx(){$('#aic').textContent=({explore:'Destinations',pools:'Pools',trips:'Custom trips',chat:'Chat',colleges:'Colleges',profile:'Profile',admin:'Dashboard'})[S.tab]||'';$('#aiq').innerHTML=(AIQ[S.tab]||[]).map(q=>`<button class="chip">${q}</button>`).join('')}
+$('#aib').onclick=()=>{$('#aip').classList.toggle('hide');if(!$('#aim').children.length)aiMsg('Hi, I am RoamBot. I can pick destinations for your budget, plan itineraries, split costs and write your bio. Try a suggestion below.')};
+$('#aix').onclick=()=>$('#aip').classList.add('hide');
+$('#aiq').onclick=e=>{if(e.target.classList.contains('chip'))askAI(e.target.textContent)};
+$('#aig').onclick=()=>{askAI($('#aii').value);$('#aii').value=''};$('#aii').onkeydown=e=>{if(e.key=='Enter')$('#aig').click()};
+$('#who').onclick=()=>{if(S.user){S.tab='profile';shell()}};
+</script><script>
+/* v4 behaviour */
+S.wl=[];S.pend=null;S.ann='';
+S.pools.push({id:6,d:6,date:'2027-07-20',type:'College-wise',aud:'Students',cap:8,mem:[M(0),M(2),M(5)],host:'Kabir',col:'IIT Kanpur'});
+const AV=u=>u.photo?`<img src="${u.photo}" alt="">`:(u.em||esc(u.name[0]));
+function cd(d){const t=Date.parse(d);if(isNaN(t))return '';const n=Math.ceil((t-Date.now())/864e5);return n>0?`<span class="cd">⏳ ${n} day${n==1?'':'s'} to go</span>`:''}
+function heart(id,b){const i=S.wl.indexOf(id);i<0?S.wl.push(id):S.wl.splice(i,1);b.classList.toggle('on',i<0);toast(i<0?'Saved to your wishlist.':'Removed from wishlist.')}
+function rmTrip(id){if(S.user.role!='Admin')return;S.trips=S.trips.filter(t=>t.id!=id);toast('Trip removed.');shell()}
+function adminX(){return `<h3 style="margin-bottom:10px">📣 Announcement</h3><div class="form"><label style="margin-top:0">Message shown to every traveller</label><input id="annt" value="${esc(S.ann||'')}" placeholder="e.g. Winter offers are live till 31 Dec"><div class="row" style="margin-top:10px"><button class="btn ghost" onclick="S.ann='';shell();toast('Announcement cleared.')">Clear</button><button class="btn rgbb" onclick="S.ann=$('#annt').value.trim();shell();toast('Announcement published.')">Publish</button></div></div><h3 style="margin-bottom:10px">Custom trips</h3><div class="tw"><table><tr><th>Trip</th><th>Route</th><th>Seats</th><th>Host</th><th></th></tr>${S.trips.map(t=>`<tr><td>${esc(t.t)}</td><td>${esc(t.from)} → ${esc(t.to)}</td><td>${t.mem.length}/${t.cap}</td><td>${esc(t.host)}</td><td><button class="btn sm ghost" onclick="rmTrip(${t.id})">Remove</button></td></tr>`).join('')||'<tr><td colspan="5">No custom trips.</td></tr>'}</table></div>`}
+function readImg(f){if(!f||!/^image\//.test(f.type))return toast('Please choose an image file.');if(f.size>8e6)return toast('Image is over 8 MB.');const r=new FileReader();r.onload=()=>{const im=new Image();im.onload=()=>{const c=document.createElement('canvas'),s=Math.min(im.width,im.height),z=256;c.width=c.height=z;c.getContext('2d').drawImage(im,(im.width-s)/2,(im.height-s)/2,s,s,0,0,z,z);S.pend=c.toDataURL('image/jpeg',.85);$('#bav').innerHTML=`<img src="${S.pend}" alt="">`;$('#dz').classList.add('has');toast('Photo ready. Press Save profile to keep it.')};im.onerror=()=>toast('Could not read that image.');im.src=r.result};r.readAsDataURL(f)}
+function wireDz(){S.pend=null;const z=$('#dz');if(!z)return;const f=$('#dzf');z.onclick=e=>{if(e.target.id!='dzr')f.click()};z.onkeydown=e=>{if(e.key=='Enter'||e.key==' '){e.preventDefault();f.click()}};f.onchange=()=>readImg(f.files[0]);['dragenter','dragover'].forEach(n=>z.addEventListener(n,e=>{e.preventDefault();z.classList.add('over')}));['dragleave','drop'].forEach(n=>z.addEventListener(n,e=>{e.preventDefault();z.classList.remove('over')}));z.addEventListener('drop',e=>readImg(e.dataTransfer.files[0]));const r=$('#dzr');if(r)r.onclick=e=>{e.stopPropagation();S.pend='';$('#bav').innerHTML=esc(S.user.em||S.user.name[0]);r.remove();toast('Photo removed. Press Save profile.')}}
+['dragover','drop'].forEach(n=>addEventListener(n,e=>e.preventDefault()));
+const _pf=profile;profile=function(){_pf();wireDz()};
+const _sp=saveProf;saveProf=function(){if(S.pend!==null&&S.pend!==undefined)S.user.photo=S.pend||'';S.pend=null;_sp()};
+const _vw=view;view=function(){_vw();if(S.ann&&S.tab!='admin')$('#main').insertAdjacentHTML('afterbegin',`<div class="ann">📣 <b>Admin:</b> ${esc(S.ann)}</div>`)};
+const IC={admin:'🛡️',explore:'🧭',pools:'🚌',trips:'🗺️',chat:'💬',colleges:'🎓',profile:'🙂'};
+const _sh=shell;shell=function(){_sh();document.querySelectorAll('#nav button').forEach(b=>b.textContent=(IC[b.dataset.t]||'')+' '+b.textContent)};
+function boom(){const c=['#FF6B57','#FFD34D','#0A9DB5','#7C4DFF','#FF4D8D','#14C45A'];for(let i=0;i<46;i++){const e=document.createElement('i');e.className='cf';e.style.cssText=`left:${Math.random()*100}vw;background:${c[i%6]};--x:${(Math.random()-.5)*240}px;animation-delay:${Math.random()*.4}s;animation-duration:${1.5+Math.random()}s`;document.body.appendChild(e);setTimeout(()=>e.remove(),3200)}}
+const _tt=toast;toast=function(t){_tt(t);if(/joined|booked|approved|published|created/i.test(t))boom()};
+$('#sky').insertAdjacentHTML('beforeend',`<svg class="fl f1" viewBox="0 0 130 50"><path d="M0 25h58" stroke="#fff" stroke-width="3" stroke-dasharray="2 9" stroke-linecap="round"/><path d="M68 25l-8-3 4-6h3l6 6 24-6c5-1 9 2 3 5l-20 8 8 11h-5l-15-9-6 4z" fill="#fff"/></svg><svg class="fl f2" viewBox="0 0 80 100"><path d="M40 4C16 4 6 24 14 42c4 8 14 16 20 20h12c6-4 16-12 20-20C74 24 64 4 40 4z" fill="#FF6B57"/><path d="M40 4c-10 14-10 40 0 58M40 4c10 14 10 40 0 58" stroke="#fff" stroke-width="3" fill="none" opacity=".7"/><path d="M34 62l-4 18h20l-4-18z" fill="#FFD34D"/><rect x="31" y="80" width="18" height="12" rx="3" fill="#8A5A2B"/></svg><svg class="fl f3" viewBox="0 0 64 64"><circle cx="32" cy="32" r="28" fill="#fff" stroke="#0A9DB5" stroke-width="4"/><g class="nd"><path d="M32 10l7 22-7 4-7-4z" fill="#FF6B57"/><path d="M32 54l-7-22 7-4 7 4z" fill="#0A9DB5"/></g><circle cx="32" cy="32" r="3" fill="#fff"/></svg><svg class="fl f4" viewBox="0 0 64 64"><path d="M32 4C20 4 12 13 12 24c0 15 20 34 20 34s20-19 20-34C52 13 44 4 32 4z" fill="#FF4D6D"/><circle cx="32" cy="24" r="8" fill="#fff"/></svg>`);
+document.querySelector('.hero').insertAdjacentHTML('beforeend',`<svg class="hv" viewBox="0 0 600 800" preserveAspectRatio="xMidYMid slice"><path id="rt" d="M70 700C140 420 340 640 520 150" fill="none" stroke="#fff" stroke-width="4" stroke-dasharray="3 14" stroke-linecap="round" opacity=".8"/><g class="bal" transform="translate(440 420)"><path d="M40 4C16 4 6 24 14 42c4 8 14 16 20 20h12c6-4 16-12 20-20C74 24 64 4 40 4z" fill="#FF6B57"/><path d="M40 4c-10 14-10 40 0 58M40 4c10 14 10 40 0 58" stroke="#fff" stroke-width="3" fill="none" opacity=".7"/><rect x="31" y="70" width="18" height="12" rx="3" fill="#8A5A2B"/></g>${[[70,700],[520,150]].map(p=>`<circle cx="${p[0]}" cy="${p[1]}" r="9" fill="#FFD34D"/><circle cx="${p[0]}" cy="${p[1]}" r="9" fill="none" stroke="#fff" stroke-width="3"><animate attributeName="r" values="9;34" dur="2s" repeatCount="indefinite"/><animate attributeName="opacity" values="1;0" dur="2s" repeatCount="indefinite"/></circle>`).join('')}<g><path d="M-22 0l12-5 16-16h7l-9 16h14l7-6h5l-4 8 4 8h-5l-7-6h-14l9 16h-7l-16-16-12-5z" fill="#fff"/><animateMotion dur="7s" repeatCount="indefinite" rotate="auto"><mpath href="#rt"/></animateMotion></g></svg>`);
+</script><script>
+/* v5 behaviour */
+S.timgs=[];S.notes=[];S.unread=0;
+const EYE='<svg viewBox="0 0 24 24"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12z"/><circle cx="12" cy="12" r="3"/></svg>',EYX='<svg viewBox="0 0 24 24"><path d="M17.9 17.9A10.9 10.9 0 0112 19C5 19 1 12 1 12a18 18 0 015.1-5.9M9.9 4.2A10.7 10.7 0 0112 4c7 0 11 8 11 8a18 18 0 01-2.2 3.2M1 1l22 22M14.1 14.1a3 3 0 01-4.2-4.2"/></svg>';
+$('#eye').innerHTML=EYE;
+$('#eye').onclick=()=>{const i=$('#pw'),s=i.type=='password';i.type=s?'text':'password';$('#eye').innerHTML=s?EYX:EYE;$('#eye').setAttribute('aria-pressed',s);$('#eye').setAttribute('aria-label',s?'Hide password':'Show password');i.focus()};
+function zoom(s){const o=document.createElement('div');o.className='ov';o.id='zm';o.innerHTML=`<img src="${s}" alt="">`;o.onclick=()=>o.remove();document.body.appendChild(o)}
+function tThumbs(){$('#tth').innerHTML=S.timgs.map((s,i)=>`<div class="th"><img src="${s}" alt=""><button type="button" aria-label="Remove photo" onclick="S.timgs.splice(${i},1);tThumbs()">×</button></div>`).join('');$('#tdz').classList.toggle('has',S.timgs.length>0)}
+function tImgs(fs){const a=[...fs].filter(f=>/^image\//.test(f.type));if(!a.length)return toast('Please choose image files.');a.forEach(f=>{if(f.size>10e6)return toast(f.name+' is over 10 MB.');const r=new FileReader();r.onload=()=>{const im=new Image();im.onload=()=>{if(S.timgs.length>=4)return toast('Maximum 4 photos.');const w=Math.min(640,im.width),hh=im.height*w/im.width,c=document.createElement('canvas');c.width=w;c.height=hh;c.getContext('2d').drawImage(im,0,0,w,hh);S.timgs.push(c.toDataURL('image/jpeg',.8));tThumbs()};im.src=r.result};r.readAsDataURL(f)})}
+function wireT(){const z=$('#tdz');if(!z)return;const f=$('#tdf');z.onclick=()=>f.click();z.onkeydown=e=>{if(e.key=='Enter'||e.key==' '){e.preventDefault();f.click()}};f.onchange=()=>{tImgs(f.files);f.value=''};['dragenter','dragover'].forEach(n=>z.addEventListener(n,e=>{e.preventDefault();z.classList.add('over')}));['dragleave','drop'].forEach(n=>z.addEventListener(n,e=>{e.preventDefault();z.classList.remove('over')}));z.addEventListener('drop',e=>tImgs(e.dataTransfer.files))}
+const _nt=newTrip;newTrip=function(){_nt();S.timgs=[];wireT()};
+const _v2=view;view=function(){_v2();const m=$('#main');m.classList.remove('pt');void m.offsetWidth;m.classList.add('pt');
+ if(S.tab=='pools'||S.tab=='trips'){const g=m.querySelector('.grid');if(g){g.insertAdjacentHTML('beforebegin','<div class="srw"><input class="srch" aria-label="Search" placeholder="🔍 Search destination, college, host…"></div>');m.querySelector('.srch').oninput=e=>{const q=e.target.value.toLowerCase();g.querySelectorAll('.card').forEach(c=>c.style.display=c.textContent.toLowerCase().includes(q)?'':'none')}}}
+ m.querySelectorAll('.grid .card:not(.cc) .cb').forEach(b=>b.insertAdjacentHTML('afterbegin','<button class="shr" title="Copy summary" aria-label="Share">🔗</button>'))};
+document.addEventListener('click',e=>{const s=e.target.closest('.shr');if(s){const c=s.closest('.cb'),t='RoamPool: '+c.querySelector('h4').textContent+' · '+(c.querySelector('.meta')||{}).textContent;try{navigator.clipboard.writeText(t).then(()=>toast('Summary copied.'),()=>toast(t))}catch(x){toast(t)}}
+ const b=e.target.closest('.btn');if(b){const r=b.getBoundingClientRect(),d=Math.max(r.width,r.height)*2,i=document.createElement('i');i.className='rp';i.style.cssText=`width:${d}px;height:${d}px;left:${e.clientX-r.left-d/2}px;top:${e.clientY-r.top-d/2}px`;b.appendChild(i);setTimeout(()=>i.remove(),650)}});
+document.body.insertAdjacentHTML('beforeend','<div id="pg"></div><div id="gl"></div>');
+addEventListener('scroll',()=>{$('#pg').style.width=scrollY/Math.max(1,document.documentElement.scrollHeight-innerHeight)*100+'%'},{passive:true});
+addEventListener('mousemove',e=>{$('#gl').style.transform=`translate(${e.clientX}px,${e.clientY}px)`},{passive:true});
+$('#who').insertAdjacentHTML('beforebegin','<button id="bell" aria-label="Notifications">🔔<i id="bc" class="hide"></i></button>');
+function bell(){const c=$('#bc');c.textContent=S.unread;c.classList.toggle('hide',!S.unread);if(S.unread){const b=$('#bell');b.classList.remove('ring');void b.offsetWidth;b.classList.add('ring')}}
+$('#bell').onclick=e=>{e.stopPropagation();const o=$('#np');if(o)return o.remove();S.unread=0;bell();document.body.insertAdjacentHTML('beforeend',`<div id="np"><b>Activity</b>${S.notes.map(n=>`<div>${esc(n.t)}<small>${n.at}</small></div>`).join('')||'<div>Nothing yet. Joins, bookings and approvals show up here.</div>'}</div>`)};
+addEventListener('click',e=>{const o=$('#np');if(o&&!o.contains(e.target))o.remove()});
+const _t3=toast;toast=function(t){_t3(t);if(S.user&&!/^Welcome|logged out/.test(t)){S.notes.unshift({t,at:new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})});S.notes=S.notes.slice(0,15);S.unread++;bell()}};
+</script></body></html>
